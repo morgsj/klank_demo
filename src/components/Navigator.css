@@ -1,0 +1,36 @@
+.col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 50px;
+}
+
+.col:hover {
+    cursor: pointer;
+}
+
+.col:hover:not(#logo) {
+    animation-name: fadeOnHover;
+    animation-duration: 1s;
+}
+
+.row {
+    margin: 5px;
+}
+
+.icon {
+    color: gray;
+    height: 6vw;
+    min-height: 75;
+    font-size: 2vw;
+}
+
+#logo {
+    color: orange
+}
+
+@keyframes fadeOnHover {
+    from {background-color: white;}
+    to {background-color: rgb(236, 235, 235);}
+}
