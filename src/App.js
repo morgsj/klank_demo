@@ -6,15 +6,21 @@ import {
 } from "react-router-dom";
 import Navigator from "./components/Navigator";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Dashboard from "./components/Dashboard";
+import Messages from "./components/Messages";
+import Search from "./components/Search";
+import Login from "./components/Login";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element = {<Navigator />}>
-          <Route path="dashboard" element={<Home />} />
-          <Route path="about" element={<About />} />
-        </Route>
+        <Routes>
+          <Route path="/" element = {<Navigator />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="login" element={<Login />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="search" element={<Search />} />
+
       </Routes>
     </BrowserRouter>
   );

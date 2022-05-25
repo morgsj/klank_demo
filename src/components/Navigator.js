@@ -5,35 +5,11 @@ import './Navigator.css';
 
 export default function Navigator() {
     return (
-        <div className="container border ml-10" style={{height: '100vh', width: '6vw', minWidth: 75}}>
-            <div className="row" style={{height: '6vw', minHeight: 75}}></div>
-
-            <div className="row" style={{height: '6vw', minHeight: 75}}>
-                <div className="col" id="logo">
-                    <h1>K</h1>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Link to="/dashboard">
-                        <House className="icon" />
-                    </Link>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col">
-                    <Link to="/search">
-                        <Binoculars className="icon" />
-                    </Link>
-                </div>
-            </div> 
-            <div className="row">
-                <div className="col">
-                    <Link to="/messages">
-                        <ChatSquare className="icon" />
-                    </Link>
-                </div>
-            </div>
-        </div>
+        <nav id="main-nav" class="nav flex-column">
+            <img id="logo" src={require("../images/logo.png")} style={{height: '5vw', minHeight: 65}}/>
+            <Link to="/dashboard"><House className="icon" /></Link>
+            <Link to="/search"><Binoculars className="icon" /></Link>
+            <Link to="/messages"><ChatSquare className="icon" /></Link>
+        </nav>
     );
 }
