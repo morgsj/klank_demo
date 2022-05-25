@@ -10,6 +10,7 @@ import Dashboard from "./components/Dashboard";
 import Messages from "./components/Messages";
 import Search from "./components/Search";
 import Login from "./components/Login";
+import Register from "./components/Register";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/" element = {<Navigator />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
           <Route path="messages" element={<Messages />} />
           <Route path="search" element={<Search />} />
 
