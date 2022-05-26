@@ -1,0 +1,11 @@
+#logout {
+    color: orange;
+    border-color: orange;
+}
+
+#logout:hover {
+    background-color: orange;
+    color: white;
+}
+
+

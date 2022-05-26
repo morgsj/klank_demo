@@ -1,0 +1,48 @@
+.dashboard-box {
+
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    background-color: rgb(233, 233, 233);
+    margin: max(1vh, 20px) 1vw max(1vh, 20px) 1vw;
+    height: max(20vh, 150px);
+    max-height: 200px;
+
+    width: 100%;
+
+    box-shadow: 7px 7px black;
+
+    cursor: pointer;
+}
+
+.dashboard-box:hover {
+    background-color: rgb(218, 217, 217);
+}
+
+.dashboard-icon {
+    width: 100%;
+    height: max(7vh, 50px);
+    color: rgb(197, 197, 197);
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+.action-description {
+    color: rgb(151, 151, 151);
+}
+
+.action-message {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+    font-family: 'BIZ UDPGothic', sans-serif;
+}
+
+.action-message, .action-description {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+

@@ -11,6 +11,7 @@ import Messages from "./components/Messages";
 import Search from "./components/Search";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Reset from "./components/Reset";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="register" element={<Register />} />
           <Route path="messages" element={<Messages />} />
           <Route path="search" element={<Search />} />
+          <Route path="reset" element={<Reset />} />
 
       </Routes>
     </BrowserRouter>

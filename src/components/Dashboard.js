@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import Header from "./Header";
+import { Link } from "react-router-dom";
 import Navigator from "./Navigator";
+import "./Dashboard.css";
+import { Search, MusicNoteList, ChatSquareDots, PersonCheck } from "react-bootstrap-icons";
 
 export default function Dashboard() {
     const [user, loading, error] = useAuthState(auth);
@@ -29,14 +32,90 @@ export default function Dashboard() {
     }, [user, loading]);
 
     return (
-        <div class="container m-0 p-0">
-            <div class="row">
-                <div class="col-sm-1">
+        <div className="container m-0 p-0">
+            <div className="row">
+                <div className="col-sm-1">
                     <Navigator />
                 </div>
-                <div class="col-sm-11">
+                <div className="col-sm-11">
                     <Header title={"Dashboard "}/>
-                    <h1>Welcome back {name.split(" ")[0]}</h1>
+                    
+                    <h1 style={{margin: '3vw', fontSize: 50}}><i><b>Welcome back {name.split(" ")[0]}</b></i></h1>
+
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm">
+                                <div className="dashboard-box">
+
+                                    <div className="container">
+                                        <div className="row action-message">
+                                            3 upcoming gigs
+                                        </div>
+                                        <div className="row">
+                                            <MusicNoteList className="dashboard-icon"/>
+                                        </div>
+                                        <div className="row action-description">
+                                            View Calendar
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            <div className="col-sm">
+                                <div className="dashboard-box">
+
+                                    <div className="container">
+                                        <div className="row action-message">
+                                            Improve your profile
+                                        </div>
+                                        <div className="row">
+                                            <PersonCheck className="dashboard-icon"/>
+                                        </div>
+                                        <div className="row action-description">
+                                            Edit Profile
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm">
+                                <div className="dashboard-box">
+
+                                    <div className="container">
+                                        <div className="row action-message">
+                                            3 message requests
+                                        </div>
+                                        <div className="row">
+                                            <ChatSquareDots className="dashboard-icon"/>
+                                        </div>
+                                        <div className="row action-description">
+                                            View Messages
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm">
+                                <div className="dashboard-box">
+
+                                    <div className="container">
+                                        <div className="row action-message">
+                                            3 venues in your area looking for a DJ
+                                        </div>
+                                        <div className="row">
+                                            <Search className="dashboard-icon"/>
+                                        </div>
+                                        <div className="row action-description">
+                                            View nearby gigs
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

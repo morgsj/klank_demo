@@ -3,12 +3,12 @@ import Navigator from "./Navigator";
 
 export default function Messages() {
     return (
-        <div class="container">
-            <div class="row">
-                <div class="col">
+        <div className="container">
+            <div className="row">
+                <div className="col">
                     <Navigator />
                 </div>
-                <div class="col">
+                <div className="col">
                     Messages
                 </div>
             </div>
