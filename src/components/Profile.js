@@ -6,9 +6,8 @@ import { auth, db, logout } from "../firebase";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
-import "./Search.css";
 
-export default function Search() {
+export default function Calendar() {
     const [user, loading, error] = useAuthState(auth);
     const navigate = useNavigate();
 
@@ -17,16 +16,14 @@ export default function Search() {
         if (!user) return navigate("/login");
     }, [user, loading]);
 
-
     return (
-        <div className="container m-0 p-0">
+        <div className="container">
             <div className="row">
-                <div className="col-sm-1">
+                <div className="col">
                     <Navigator />
                 </div>
-                <div className="col-sm-11">
-                    <Header title={"Search"}/>
-                    <input type="text" id="search-bar" placeholder="Search..."></input>
+                <div className="col">
+                    <Header title={"Profile"}/>
                 </div>
             </div>
         </div>

@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { auth, db, logout } from "../firebase";
+
 import Navigator from "./Navigator";
+import Header from "./Header";
 
 export default function Messages() {
+    const [user, loading, error] = useAuthState(auth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (loading) return;
+        if (!user) return navigate("/login");
+    }, [user, loading]);
+
     return (
         <div className="container">
             <div className="row">
@@ -9,7 +23,7 @@ export default function Messages() {
                     <Navigator />
                 </div>
                 <div className="col">
-                    Messages
+                    <Header title={"Messages"}/>
                 </div>
             </div>
         </div>

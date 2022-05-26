@@ -12,18 +12,23 @@ import Search from "./components/Search";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Reset from "./components/Reset";
+import Calendar from "./components/Calendar";
+import Profile from "./components/Profile";
+
 
 export default function App() {
+  
   return (
     <BrowserRouter>
         <Routes>
-          <Route path="/" element = {<Navigator />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="messages" element={<Messages />} />
           <Route path="search" element={<Search />} />
           <Route path="reset" element={<Reset />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="calendar" element={<Calendar />} />
 
       </Routes>
     </BrowserRouter>

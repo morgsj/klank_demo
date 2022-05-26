@@ -36,13 +36,13 @@
 .action-message {
     padding-top: 2vh;
     padding-bottom: 2vh;
-
-    font-family: 'BIZ UDPGothic', sans-serif;
 }
 
 .action-message, .action-description {
     display: flex;
     align-content: center;
     justify-content: center;
+
+    font-family: 'BIZ UDPGothic', sans-serif;
 }
 
