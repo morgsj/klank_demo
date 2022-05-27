@@ -23,10 +23,11 @@
 
 .dashboard-icon {
     width: 100%;
-    height: max(7vh, 50px);
+    height: min(max(7vh, 50px), 5vw);
+    min-height: 50px;
     color: rgb(197, 197, 197);
-    margin-top: 1vh;
-    margin-bottom: 1vh;
+    margin-top: min(1vh, 1vw);
+    margin-bottom: min(2vh, 2vw);
 }
 
 .action-description {
@@ -34,8 +35,8 @@
 }
 
 .action-message {
-    padding-top: 2vh;
-    padding-bottom: 2vh;
+    padding-top: min(2vh, 2vw);
+    padding-bottom: min(2vh, 2vw);
 }
 
 .action-message, .action-description {

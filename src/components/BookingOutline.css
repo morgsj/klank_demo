@@ -1,0 +1,10 @@
+.orange-button {
+    color: orange;
+    border-color: orange;
+    width: 100%;
+}
+
+.orange-button:hover {
+    background-color: orange;
+    color: white;
+}

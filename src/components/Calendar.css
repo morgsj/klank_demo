@@ -1,0 +1,19 @@
+.details-button {
+    color: orange;
+    border-color: orange;
+}
+
+.details-button:hover {
+    background-color: orange;
+    color: white;
+}
+
+
+#exampleModal {
+    padding: 5%;
+}
+
+#booking-modal-body {
+
+    max-width: 100%;
+}
