@@ -1,10 +1,10 @@
 import React from "react";
-import { logout } from "../firebase";
+import { logout } from "../api/auth-api";
 import "./Header.css";
 
 export default function Header(props) {
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light p-3 w-100">
+        <nav className="navbar justify-content-between navbar-light bg-light p-3 w-100">
             <h3 className="m-3">{props.title}</h3>
             
             <form className="form-inline my-2 my-lg-0">

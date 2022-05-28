@@ -2,40 +2,26 @@ import React, { useEffect, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db, logout } from "../firebase";
+import { query, collection, getDocs, where } from "firebase/firestore";
+import { auth } from "../firebase";
+import { getCalendarEvents } from "../api/calendar-api";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
 import BookingOutline from "./BookingOutline";
 
-import Modal from 'react-modal';
-
 import "./Calendar.css";
-import { Button } from "bootstrap";
 
 export default function Calendar() {
     const [user, loading, error] = useAuthState(auth);
+    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
-
-    let subtitle;
-    const [modalIsOpen, setIsOpen] = useState(false);
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        subtitle.style.color = '#f00';
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
 
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/login");
+        
+        getCalendarEvents(user.uid).then((data) => setEvents(data));
     }, [user, loading]);
 
     return (
@@ -47,7 +33,7 @@ export default function Calendar() {
                     </div>
                     <div className="col-sm-11">
                         <Header title={"Calendar"}/>
-                        <h1>Upcoming bookings:</h1>
+                        <h1 style={{margin: '1vw'}}>Upcoming bookings:</h1>
 
                         <table className="table table-striped">
                             <thead>
@@ -60,28 +46,19 @@ export default function Calendar() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>03/02/23</td>
-                                    <td>The Vic</td>
-                                    <td>22:00-02:00</td>
-                                    <td>£60</td>
-                                    <td>
-                                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            Details
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>04/02/23</td>
-                                    <td>SILO</td>
-                                    <td>20:00-02:00</td>
-                                    <td>£11</td>
-                                    <td>
-                                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            Details
-                                        </button>
-                                    </td>
-                                </tr>
+                                {events.map((event, index) => (
+                                    <tr key={index}>
+                                        <td>{event.startTime.seconds}</td>
+                                        <td>{event.venue}</td>
+                                        <td>{event.startTime.seconds} - {event.endTime.seconds}</td>
+                                        <td>£{event.fee}</td>
+                                        <td>
+                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db, logout } from "../firebase";
+import { auth, db } from "../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 
 import Header from "./Header";
@@ -129,8 +129,8 @@ function ViewCalendar(props) {
     return (
         <div className="dashboard-box">
 
-            <div className="container">
-                <div className="row action-message" onClick={() => props.navigate("/calendar")}>
+            <div className="container" onClick={() => props.navigate("/calendar")}>
+                <div className="row action-message">
                     3 upcoming gigs
                 </div>
                 <div className="row">
