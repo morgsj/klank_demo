@@ -3,12 +3,18 @@ import {
     where,
     query,
     orderBy,
+    setDoc,
+    doc,
+    Timestamp
 } from "firebase/firestore";
 
 import {
     db,
     messagesRef
 } from "../firebase";
+
+import { v4 as UUID } from 'uuid';
+
 
 const getAllConversations = async (uid, isHost) => {
     try {
@@ -44,5 +50,19 @@ const getConversation = async (host, performer) => {
     }
 };
 
+const sendNewMessage = async (host, performer, isHostSender, isRequest, message) => {
+    try {
+        const time = Timestamp.fromDate(new Date());
+        const uid = UUID();
+        const dc = doc(db, "/messages/", uid);
 
-export { getAllConversations, getConversation };
+        const entry = {host, performer, isHostSender, isRequest, message, uid, time};
+        await setDoc(dc, entry);
+        
+        return entry;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export { getAllConversations, getConversation, sendNewMessage };

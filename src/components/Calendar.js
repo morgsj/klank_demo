@@ -59,18 +59,6 @@ export default function Calendar() {
                                         </td>
                                     </tr>
                                 ))}
-
-                                    <tr>
-                                        <td>asd</td>
-                                        <td>afd</td>
-                                        <td>afds</td>
-                                        <td>£31</td>
-                                        <td>
-                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#bookingModal">
-                                                Details
-                                            </button>
-                                        </td>
-                                    </tr>
                             </tbody>
                         </table>
 

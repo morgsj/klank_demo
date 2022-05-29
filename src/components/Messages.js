@@ -9,21 +9,27 @@ import Navigator from "./Navigator";
 import Header from "./Header";
 
 import "./Messages.css";
-import { getAllConversations, getConversation } from "../api/message-api";
+import { getAllConversations, getConversation, sendNewMessage } from "../api/message-api";
 import { getUserDetails } from "../api/user-api";
+import { Send } from "react-bootstrap-icons";
 
 export default function Messages() {
     const [user, loading, error] = useAuthState(auth);
+    const [userDetails, setUserDetails] = useState(null);
     const [selectedConversation, selectConversation] = useState([]); // stores messages of current conversation in view
     const [conversations, setConversations] = useState([]); // stores array of {senderID, latestMessage} pairs for sidebar view
     const [messagerName, setMessagerName] = useState("");
+    const [newMessage, setNewMessage] = useState("");
+
     const navigate = useNavigate();
 
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/login");
-
-        getAllConversations(user.uid, false).then(conversations => setConversations(conversations));
+        else getUserDetails(user.uid).then((data) => {
+            setUserDetails(data);
+            getAllConversations(user.uid, data.type.includes("host")).then(conversations => setConversations(conversations));
+        });
     }, [user, loading]);
 
     const clickConversation = (uid, name) => {
@@ -31,6 +37,26 @@ export default function Messages() {
             selectConversation(messages);
             setMessagerName(name);
         });
+    };
+
+    const handleMessageChange = (event) => setNewMessage(event.target.value);
+
+    const handleSendMessage = () => {
+        if (newMessage.length != 0) {
+
+            const host = selectedConversation[0].host;
+            const performer = selectedConversation[0].performer;
+            const isHostSender = false;
+            const isRequest = false;
+            const message = newMessage;
+            
+
+            sendNewMessage(host, performer, isHostSender, isRequest, message).then(data => {
+                setNewMessage("");
+                selectConversation([... selectedConversation, data]);
+            });
+
+        }
     };
 
     return (
@@ -42,7 +68,6 @@ export default function Messages() {
                 <div className="col-sm-11">
                     <Header title={"Messages"}/>
                     <div id="messages-container">
-
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-3 sidebar">
@@ -54,7 +79,23 @@ export default function Messages() {
                                     <div id="conversation-header">
                                         <h5>{messagerName}</h5>
                                     </div>
-                                    {selectedConversation.map((message, index) => (<Message key={index} message={message.message}/>))}
+                                    {selectedConversation.map((message, index) => (<Message key={index} message={message}/>))}
+
+                                    <div id="conversation-footer">
+                                        <div class="input-group rounded">
+                                            <input  type="text" 
+                                                    className="form-control new-message-box" 
+                                                    placeholder="New Message..." 
+                                                    aria-label="New Message..." 
+                                                    aria-describedby="new-message"
+                                                    value={newMessage}
+                                                    onChange={handleMessageChange}/>
+                                            <span class="input-group-text border-0" id="new-message">
+                                                <Send id="send-icon" onClick={handleSendMessage}/>
+                                            </span>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -83,7 +124,25 @@ function SidebarMessage(props) {
 
 
 function Message(props) {
-    return (<div className="message">
-        {props.message}
-    </div>)
+    if (!props.message) return (<></>)
+    
+    if (props.message.isHostSender) {
+        return (
+            <div className="message-container">
+                <div className="message" style={{backgroundColor: 'gainsboro'}}>
+                    {props.message.message}
+                </div>
+                <p className="message-time">{props.message.time.toDate().toLocaleTimeString()}</p>
+            </div>
+        );
+    } else {
+        return (
+            <div className="message-container" style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
+                <div className="message" style={{backgroundColor: 'orange'}}>
+                    {props.message.message}
+                </div>
+                <p className="message-time">{props.message.time.toDate().toLocaleTimeString()}</p>
+            </div>
+        );
+    }
 }

@@ -21,7 +21,7 @@
 }
 
 #conversation-col {
-    border: 1px solid yellow;
+    border: 3px solid aqua;
     padding: 0;
 }
 
@@ -36,6 +36,33 @@
     border: 10px solid gray;
 }
 
-.message {
+.message-container {
     border: 4px solid blue;
+}
+
+.message {
+    margin: 1vh 1vw 0 1vw;
+    padding: 1vh 1vw 1vh 1vw;
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.message-time {
+    color: gray;
+    font-size: 12px;
+    margin: 0 1vw 1vh 1vw;
+}
+
+#conversation-footer {
+    background-color: gainsboro;
+    width: 100%;
+    margin: 0;
+}
+
+.new-message-box {
+    background-color: gainsboro;
+}
+
+#send-icon {
+    cursor: pointer;
 }
