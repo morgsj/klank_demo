@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { query, collection, getDocs, where } from "firebase/firestore";
 import { auth } from "../firebase";
-import { getCalendarEvents } from "../api/calendar-api";
+import { getCalendarEvents } from "../api/booking-api";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
@@ -26,6 +25,7 @@ export default function Calendar() {
 
     return (
         <>
+            <BookingModal />
             <div className="container m-0 p-0">
                 <div className="row">
                     <div className="col-sm-1">
@@ -48,37 +48,48 @@ export default function Calendar() {
                             <tbody>
                                 {events.map((event, index) => (
                                     <tr key={index}>
-                                        <td>{event.startTime.seconds}</td>
-                                        <td>{event.venue}</td>
-                                        <td>{event.startTime.seconds} - {event.endTime.seconds}</td>
+                                        <td>{event.startTime.toDate().toLocaleDateString()}</td>
+                                        <td>{event.venue.name}</td>
+                                        <td>{event.startTime.toDate().toLocaleTimeString()} - {event.endTime.toDate().toLocaleTimeString()}</td>
                                         <td>£{event.fee}</td>
                                         <td>
-                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#bookingModal">
                                                 Details
                                             </button>
                                         </td>
                                     </tr>
                                 ))}
+
+                                    <tr>
+                                        <td>asd</td>
+                                        <td>afd</td>
+                                        <td>afds</td>
+                                        <td>£31</td>
+                                        <td>
+                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                                Details
+                                            </button>
+                                        </td>
+                                    </tr>
                             </tbody>
                         </table>
 
                     </div>
                 </div>
 
-            </div>
             
-            <BookingModal />
+            </div>
         </>
     );
 }
 
 function BookingModal() {
     return (
-        <div className="modal fade" id="exampleModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="bookingModal" tabIndex={-1} role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
             <div className="modal-dialog" id="booking-modal-body" role="document">
                 <div className="modal-content">
                 <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">Booking Details: 235987BR398BNSDJ</h5>
+                    <h5 className="modal-title" id="bookingModalLabel">Booking Details: 235987BR398BNSDJ</h5>
                     <button type="button" className="btn close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>

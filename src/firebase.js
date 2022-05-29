@@ -24,9 +24,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const usersRef = collection(db, "users");
+const bookingsRef = collection(db, "bookings");
+const venuesRef = collection(db, "venues");
+const messagesRef = collection(db, "messages");
 
 export {
     auth,
     db,
-    usersRef
+    usersRef, bookingsRef, venuesRef, messagesRef
 };

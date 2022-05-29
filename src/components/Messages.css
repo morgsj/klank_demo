@@ -1,0 +1,41 @@
+.sidebar-message {
+    width: 100%;
+    border: 1px solid gainsboro;
+    padding: 1vw;
+    overflow-x: hidden;
+    white-space: nowrap;
+    margin: 0;
+
+    font-family: 'Raleway', sans-serif;
+
+    cursor: pointer;
+}
+
+#messages-container {
+    padding: 0;
+    margin: 1vh 1vw 1vh 1vw;
+
+    width: calc(100% - 2vw);
+    height: calc(100% - 2vh);
+    border: 1px solid green;
+}
+
+#conversation-col {
+    border: 1px solid yellow;
+    padding: 0;
+}
+
+#conversation-header {
+    background-color: gainsboro;
+    width: 100%;
+    padding: 1vh 1vw 1vh 1vw;
+    margin: 0;
+}
+
+.sidebar {
+    border: 10px solid gray;
+}
+
+.message {
+    border: 4px solid blue;
+}

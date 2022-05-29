@@ -23,7 +23,7 @@ import {
 } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
-const signInWithGoogle = async () => {
+const signInWithGoogle = async (type) => {
     try {
         const res = await signInWithPopup(auth, googleProvider);
         const user = res.user;
@@ -36,7 +36,7 @@ const signInWithGoogle = async () => {
                 name: user.displayName,
                 authProvider: "google",
                 email: user.email,
-                type: ["artist"],
+                type: type,
                 location: [0.0, 0.0],
             });
         }
@@ -55,7 +55,7 @@ const logInWithEmailAndPassword = async (email, password) => {
     }
 };
 
-const registerWithEmailAndPassword = async (name, email, password) => {
+const registerWithEmailAndPassword = async (name, email, password, type) => {
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
@@ -64,7 +64,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
             name,
             authProvider: "local",
             email,
-            type: ["artist"],
+            type: type,
             location: [0.0, 0.0],
         });
     } catch (err) {

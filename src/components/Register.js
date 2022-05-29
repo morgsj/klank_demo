@@ -18,10 +18,12 @@ function Register() {
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [user, loading, error] = useAuthState(auth);
+    const [isHost, setIsHost] = useState(true);
+
     const history = useNavigate();
     const register = () => {
         if (!name) alert("Please enter name");
-        registerWithEmailAndPassword(name, email, password);
+        registerWithEmailAndPassword(name, email, password, [ isHost ? "host" : "performer" ]);
     };
     useEffect(() => {
         if (loading) return;
@@ -30,6 +32,7 @@ function Register() {
     return (
         <div className="register">
         <div className="register__container">
+            {console.log(isHost)}
             <input
             type="text"
             className="register__textBox"
@@ -51,12 +54,26 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             />
+
+            <div className="form-check">
+                <input className="form-check-input" type="radio" name="radios" id="host-radio" value="option1" checked={isHost} onChange={() => setIsHost(true)}/>
+                <label className="form-check-label" htmlFor="radios1">
+                    Register as a host
+                </label>
+            </div>
+            <div className="form-check">
+                <input className="form-check-input" type="radio" name="radios" id="performer-radio" value="option2" checked={!isHost} onChange={() => setIsHost(false)}/>
+                <label className="form-check-label" htmlFor="radios2">
+                    Register as a performer
+                </label>
+            </div>
+
             <button className="register__btn" onClick={register}>
             Register
             </button>
             <button
             className="register__btn register__google"
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle([ isHost ? "host" : "performer" ])}
             >
             Register with Google
             </button>
