@@ -16,6 +16,7 @@ export default function Messages() {
     const [user, loading, error] = useAuthState(auth);
     const [selectedConversation, selectConversation] = useState([]); // stores messages of current conversation in view
     const [conversations, setConversations] = useState([]); // stores array of {senderID, latestMessage} pairs for sidebar view
+    const [messagerName, setMessagerName] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,8 +26,11 @@ export default function Messages() {
         getAllConversations(user.uid, false).then(conversations => setConversations(conversations));
     }, [user, loading]);
 
-    const clickConversation = (uid) => {
-        getConversation(uid, user.uid).then(messages => selectConversation(messages));
+    const clickConversation = (uid, name) => {
+        getConversation(uid, user.uid).then(messages => {
+            selectConversation(messages);
+            setMessagerName(name);
+        });
     };
 
     return (
@@ -43,16 +47,14 @@ export default function Messages() {
                             <div className="row">
                                 <div className="col-sm-3 sidebar">
                                     {conversations.map((convo, index) => (
-                                        <div className="sidebar-message" onClick={() => clickConversation(convo.with)} key={index}>
-                                            <SidebarMessage with={convo.with} message={convo.message} />
-                                        </div>
+                                        <SidebarMessage with={convo.with} message={convo.message} key={index} selected={(name) => clickConversation(convo.with, name)} />
                                     ))}
                                 </div>
                                 <div className="col-sm-9" id="conversation-col">
                                     <div id="conversation-header">
-                                        <h5>Jake</h5>
+                                        <h5>{messagerName}</h5>
                                     </div>
-                                    {selectedConversation.map(message => (<Message message={message.message}/>))}
+                                    {selectedConversation.map((message, index) => (<Message key={index} message={message.message}/>))}
                                 </div>
                             </div>
                         </div>
@@ -72,10 +74,13 @@ function SidebarMessage(props) {
     })
 
     return (<>
-        <b>{name ?? props.with}</b><br />
-        {props.message ?? "Message not found"}
+        <div className="sidebar-message" onClick={() => props.selected(name)}>
+            <b>{name ?? props.with}</b><br />
+            {props.message ?? "Message not found"}
+        </div>
     </>)
 }
+
 
 function Message(props) {
     return (<div className="message">
