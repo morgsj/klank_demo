@@ -1,6 +1,5 @@
 .sidebar-message {
     width: 100%;
-    border: 1px solid gainsboro;
     padding: 1vw;
     overflow-x: hidden;
     white-space: nowrap;
@@ -9,6 +8,11 @@
     font-family: 'Raleway', sans-serif;
 
     cursor: pointer;
+
+}
+
+hr {
+    margin: 0;
 }
 
 #messages-container {
@@ -21,8 +25,9 @@
 }
 
 #conversation-col {
-    border: 3px solid aqua;
     padding: 0;
+
+    border: 1px solid gainsboro;
 }
 
 #conversation-header {
@@ -33,11 +38,9 @@
 }
 
 .sidebar {
-    border: 10px solid gray;
-}
-
-.message-container {
-    border: 4px solid blue;
+    padding: 0;
+    border: 1px solid gainsboro;
+    min-height: 100%;
 }
 
 .message {
@@ -51,6 +54,7 @@
     color: gray;
     font-size: 12px;
     margin: 0 1vw 1vh 1vw;
+    width: fit-content;
 }
 
 #conversation-footer {
@@ -65,4 +69,12 @@
 
 #send-icon {
     cursor: pointer;
+}
+
+#inner-grid-container {
+    height: 100%;
+}
+
+#inner-grid-row {
+    height: 100%;
 }
