@@ -10,32 +10,42 @@ import Header from "./Header";
 import BookingOutline from "./BookingOutline";
 
 import "./Calendar.css";
+import { Col, Container, Row, Table, Modal, Button } from "react-bootstrap";
 
 export default function Calendar() {
     const [user, loading, error] = useAuthState(auth);
     const [events, setEvents] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const [showModal, setShowModal] = useState(false);
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = (i) => {
+        setSelectedEvent(events[i]);
+        setShowModal(true);
+    };
+
     const navigate = useNavigate();
 
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/login");
         
-        getCalendarEvents(user.uid).then((data) => setEvents(data));
+        getCalendarEvents(user.uid).then((data) => {setEvents(data); console.log(data);});
     }, [user, loading]);
 
     return (
         <>
-            <BookingModal />
-            <div className="container m-0 p-0">
-                <div className="row">
-                    <div className="col-sm-1">
+            <Container className="m-0 p-0">
+                <Row>
+                    <Col xs={1}>
                         <Navigator />
-                    </div>
-                    <div className="col-sm-11">
+                    </Col>
+                    <Col xs={11}>
                         <Header title={"Calendar"}/>
+
                         <h1 style={{margin: '1vw'}}>Upcoming bookings:</h1>
 
-                        <table className="table table-striped">
+                        <Table striped>
                             <thead>
                                 <tr>
                                     <th scope="col">Date</th>
@@ -53,43 +63,35 @@ export default function Calendar() {
                                         <td>{event.startTime.toDate().toLocaleTimeString()} - {event.endTime.toDate().toLocaleTimeString()}</td>
                                         <td>£{event.fee}</td>
                                         <td>
-                                            <button type="button" className="btn details-button" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                            <Button type="button" className="details-button" onClick={() => handleShowModal(index)}>
                                                 Details
-                                            </button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </Table>
 
-                    </div>
-                </div>
+                    </Col>
+                </Row>
+            </Container>
 
-            
-            </div>
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Booking - {selectedEvent ? selectedEvent.uid : "Loading..."}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    
+                    <BookingOutline event={selectedEvent}/>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
 
-function BookingModal() {
-    return (
-        <div className="modal fade" id="bookingModal" tabIndex={-1} role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
-            <div className="modal-dialog" id="booking-modal-body" role="document">
-                <div className="modal-content">
-                <div className="modal-header">
-                    <h5 className="modal-title" id="bookingModalLabel">Booking Details: 235987BR398BNSDJ</h5>
-                    <button type="button" className="btn close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div className="modal-body">
-                    <BookingOutline/>
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-                </div>
-            </div>
-        </div>
-    );
-}

@@ -1,5 +1,5 @@
 import React from "react";
-import { House, Binoculars, ChatSquare, Person, CalendarWeek } from "react-bootstrap-icons";
+import { House, Binoculars, ChatSquare, Person, CalendarWeek, Gear } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import './Navigator.css';
 
@@ -12,6 +12,7 @@ export default function Navigator() {
             <Link to="/messages"><ChatSquare className="nav-icon" /></Link>
             <Link to="/calendar"><CalendarWeek className="nav-icon" /></Link>
             <Link to="/profile"><Person className="nav-icon" /></Link>
+            <Link to="/settings"><Gear className="nav-icon" /></Link>
         </nav>
     );
 }
