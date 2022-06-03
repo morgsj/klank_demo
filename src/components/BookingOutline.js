@@ -1,20 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
+import { Container, Table, InputGroup, FormControl, Form, Dropdown, DropdownButton } from "react-bootstrap";
+
 import "./BookingOutline.css";
 
 export default function BookingOutline(props) {
-    if (props.event)
+    const editable = props.editable;
+    const newBooking = true; //props.newBooking
+    const venues = ["the vic", "the adamson", "russacks"];
+
+
+    // Modal state values
+    const [venue, setVenue] = useState(venues[0]);
+    const handleVenueChange = (venue) => setVenue(venue);
+
+    const [notes, setNotes] = useState("");
+    const handleNotesChange = (e) => {
+        setNotes(e.target.value);
+        callFieldsChanged();
+    }
+
+    const [fee, setFee] = useState("");
+    const handleFeeChange = (e) => {
+        setFee(e.target.value);
+        callFieldsChanged();
+    }
+
+    const [date, setDate] = useState((new Date()).toISOString().split('T')[0]);
+    const handleDateChange = (e) => {
+        setDate(e.target.value);
+        callFieldsChanged();
+    }
+
+    const [startTime, setStartTime] = useState("20:00");
+    const handleStartTimeChange = (e) => {
+        setStartTime(e.target.value);
+        callFieldsChanged();
+    }
+    
+    const [endTime, setEndTime] = useState("21:00");
+    const handleEndTimeChange = (e) => {
+        setEndTime(e.target.value);
+        callFieldsChanged();
+    }
+
+    const callFieldsChanged = () => props.fieldsChanged({fee});
+
+    if (props.booking) {
         return (
-            <div className="container w-100">
-                <table className="table">
+            <Container className="w-100">
+                <Table>
                     <tbody>
                         <tr>
                             <td>
                                 <b>Date:</b><br />
-                                {props.event.startTime.toDate().toLocaleDateString()}
+                                {props.booking.startTime.toDate().toLocaleDateString()}
                             </td>
                             <td>
+
                                 <b>Fee:</b><br />
-                                £{props.event.fee}
+                                
+                                {editable && (
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>£</InputGroup.Text>
+                                        <FormControl aria-label="Amount (to the nearest pound)" value={props.booking.fee}/>
+                                        <InputGroup.Text>.00</InputGroup.Text>
+                                    </InputGroup>
+                                )}
+
+                                {!editable && "£" + props.booking.fee}
                             </td>
                         </tr>
                         <tr>
@@ -24,7 +77,7 @@ export default function BookingOutline(props) {
                             </td>
                             <td rowSpan={3}>
                                 <b>Notes:</b><br />
-                                <textarea className="form-control" id="exampleFormControlTextarea1" value={props.event.notes} rows="8"></textarea>
+                                <textarea className="form-control" id="notesTextArea" value={props.booking.notes} rows="8"></textarea>
 
                             </td>
                         </tr>
@@ -37,7 +90,7 @@ export default function BookingOutline(props) {
                         <tr>
                             <td rowSpan={2}>
                                 <iframe 
-                                    src={`https://maps.google.com/maps?q='+${props.event.venue.location._lat}+','+${props.event.venue.location._long}+'&hl=es&z=14&output=embed`}
+                                    src={`https://maps.google.com/maps?q='+${props.booking.venue.location._lat}+','+${props.booking.venue.location._long}+'&hl=en&z=14&output=embed`}
                                     style={{border:0, width:'100%'}} 
                                     allowFullScreen={false} 
                                     loading="lazy" 
@@ -51,8 +104,82 @@ export default function BookingOutline(props) {
                             </td>
                         </tr>
                     </tbody>
-                </table>
-            </div>
+                </Table>
+            </Container>
         );
-    else return (<></>);
+    } else {
+        if (newBooking) {
+            return (
+                <Container className="w-100">
+                    <Table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <b>Date:</b><br />
+                                    <Form.Group controlId="bookingDate">
+                                        <Form.Control type="date" name="bookingDate" placeholder="Booking date" value={date} onChange={handleDateChange}/>
+                                    </Form.Group>
+                                </td>
+                                <td>
+    
+                                    <b>Fee:</b><br />
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>£</InputGroup.Text>
+                                        <FormControl aria-label="Amount (to the nearest pound)" value={fee} onChange={handleFeeChange} />
+                                        <InputGroup.Text>.00</InputGroup.Text>
+                                    </InputGroup>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Time:</b><br />
+                                    Start Time:
+                                    <Form.Group controlId="bookingStartTime">
+                                        <Form.Control type="time" name="bookingStartTime" placeholder="Date of Birth" value={startTime} onChange={handleStartTimeChange}/>
+                                    </Form.Group>
+
+                                    End Time: 
+                                    <Form.Group controlId="bookingEndTime">
+                                        <Form.Control type="time" name="bookingEndTime" placeholder="Date of Birth" value={endTime} onChange={handleEndTimeChange}/>
+                                    </Form.Group>
+                                </td>
+                                <td rowSpan={3}>
+                                    <b>Notes (provided equipment, etc.):</b><br />
+                                    <textarea className="form-control" id="notesTextArea" value={notes} rows="8" onChange={handleNotesChange}></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Venue:</b><br />
+                                    <InputGroup className="mb-3">
+                                        <DropdownButton
+                                            variant="outline-secondary"
+                                            title={venue}
+                                            id="input-group-dropdown-1"
+                                        >
+                                            {venues.map((venue, index) => (
+                                                <Dropdown.Item key={index} onClick={() => handleVenueChange(venue)}>{venue}</Dropdown.Item>
+                                            ))}
+                                        </DropdownButton>
+                                    </InputGroup>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <iframe
+                                        src={`https://maps.google.com/maps?q='+0+','+0+'&hl=en&z=14&output=embed`}
+                                        style={{border:0, width:'100%'}} 
+                                        allowFullScreen={false} 
+                                        loading="lazy" 
+                                        referrerPolicy="no-referrer-when-downgrade" 
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Container>
+            );
+        } else return (<>Daddy</>);
+    }
+        
 }

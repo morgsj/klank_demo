@@ -82,7 +82,7 @@ export default function Calendar() {
                 </Modal.Header>
                 <Modal.Body>
                     
-                    <BookingOutline event={selectedEvent}/>
+                    <BookingOutline booking={selectedEvent}/>
 
                 </Modal.Body>
                 <Modal.Footer>

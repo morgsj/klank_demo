@@ -3,15 +3,19 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
-import { logout } from "../api/auth-api";
+import { Send } from "react-bootstrap-icons";
+import { Button, Container, Navbar, Row, Modal } from "react-bootstrap";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
+import BookingOutline from "./BookingOutline";
 
 import "./Messages.css";
+
 import { getAllConversations, getConversation, sendNewMessage } from "../api/message-api";
 import { getUserDetails } from "../api/user-api";
-import { Send } from "react-bootstrap-icons";
+import { getBookingByID } from "../api/booking-api";
+import { getVenueDetails } from "../api/venue-api";
 
 export default function Messages() {
     const [user, loading, error] = useAuthState(auth);
@@ -21,6 +25,33 @@ export default function Messages() {
     const [conversations, setConversations] = useState(null); // stores array of {senderID, latestMessage} pairs for sidebar view
     const [messagerName, setMessagerName] = useState("");
     const [newMessage, setNewMessage] = useState("");
+
+    const [showModal, setShowModal] = useState(false);
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
+
+    const [booking, setBooking] = useState(false);
+    const handleBookingEdit = (booking) => setBooking(booking);
+    const sendBookingRequest = () => {
+        console.log(booking);
+    }
+
+    const handleSendBookingRequestClicked = () => {
+        setBooking(null);
+        handleShowModal();
+    }
+
+    const handleViewBookingRequest = (message) => {
+        const bookingID = message.message;
+        getBookingByID(bookingID).then(res => {
+            let booking = res;
+            getVenueDetails(booking.venue).then(data => {
+                booking.venue = data;
+                setBooking(booking);
+            });
+        }); 
+        handleShowModal();
+    }
 
     const navigate = useNavigate();
 
@@ -66,26 +97,26 @@ export default function Messages() {
         }
     };
 
-    return (
-        <div className="container m-0 p-0">
-            <div className="row">
+    return (<>
+        <Container className="m-0 p-0">
+            <Row>
                 <div className="col-sm-1">
                     <Navigator />
                 </div>
                 <div className="col-sm-11">
                     <Header title={"Messages"}/>
                     <div id="messages-container">
-                        <div className="container" id="inner-grid-container">
-                            <div className="row" id="inner-grid-row">
+                        <Container id="inner-grid-container">
+                            <Row id="inner-grid-row">
                                 <div className="col-sm-3 sidebar">
 
-                                    <nav className="navbar justify-content-between navbar-light w-100" style={{backgroundColor: "gainsboro"}}>
+                                    <Navbar className="justify-content-between navbar-light w-100" style={{backgroundColor: "gainsboro"}}>
                                         <p className="m-3 p-0">Messages</p>
                                         
                                         <form className="form-inline my-2 my-lg-0">
                                             <button className="btn" onClick={() => {}}>+</button>
                                         </form>
-                                    </nav>
+                                    </Navbar>
 
                                     {conversations == null && (<p>Loading Messages...</p>)}
 
@@ -102,8 +133,12 @@ export default function Messages() {
                                         <>
                                             <div id="conversation-header">
                                                 <h5>{messagerName}</h5>
+
+                                                {isHost && (
+                                                    <Button onClick={handleSendBookingRequestClicked}>Send Booking Request</Button>
+                                                )}
                                             </div>
-                                            {selectedConversation.map((message, index) => (<Message key={index} message={message} sentByCurrentUser={message.isHostSender == isHost}/>))}
+                                            {selectedConversation.map((message, index) => (<Message key={index} message={message} sentByCurrentUser={message.isHostSender == isHost} handleViewBookingRequest={handleViewBookingRequest}/>))}
 
                                             <div id="conversation-footer">
                                                 <div className="input-group rounded">
@@ -125,14 +160,34 @@ export default function Messages() {
                                     
 
                                 </div>
-                            </div>
-                        </div>
+                            </Row>
+                        </Container>
 
                     </div>
                 </div>
-            </div>
-        </div>
-    );
+            </Row>
+        </Container>
+        
+
+        <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>New Booking</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                
+                <BookingOutline booking={booking} editable fieldsChanged={handleBookingEdit}/>
+
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={sendBookingRequest}>
+                    Send
+                </Button>
+                <Button variant="secondary" onClick={handleCloseModal}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    </>);
 }
 
 function SidebarMessage(props) {
@@ -161,7 +216,7 @@ function Message(props) {
         return (
             <div className="message-container">
                 <div className="message" style={{backgroundColor: 'gainsboro'}}>
-                    {props.message.message}
+                    {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message)}>View Booking Request</Button>) : props.message.message}
                 </div>
                 <p className="message-time">{removeSeconds(props.message.time.toDate().toLocaleTimeString())}</p>
             </div>
@@ -169,20 +224,20 @@ function Message(props) {
     } else {
         return (
             <div className="message-container" style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
-                <div className="container">
-                    <div className="row" style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
+                <Container>
+                    <Row style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
 
                         <div className="message" style={{backgroundColor: 'orange', display: 'flex'}}>
-                            {props.message.message}
+                            {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message)}>View Booking Request</Button>) : props.message.message}
                         </div>
 
-                    </div>
-                    <div className="row" style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
+                    </Row>
+                    <Row style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
                         <p className="message-time">
                             {removeSeconds(props.message.time.toDate().toLocaleTimeString())}
                         </p>
-                    </div>
-                </div>
+                    </Row>
+                </Container>
             </div>
         );
     }
