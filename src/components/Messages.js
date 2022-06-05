@@ -20,6 +20,7 @@ import { getVenueDetails } from "../api/venue-api";
 export default function Messages() {
     const [user, loading, error] = useAuthState(auth);
     const [userDetails, setUserDetails] = useState(null);
+    const [hostVenues, setHostVenues] = useState([]);
     const [isHost, setIsHost] = useState(false);
     const [selectedConversation, selectConversation] = useState(null); // stores messages of current conversation in view
     const [conversations, setConversations] = useState(null); // stores array of {senderID, latestMessage} pairs for sidebar view
@@ -30,27 +31,38 @@ export default function Messages() {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
-    const [booking, setBooking] = useState(false);
+    const [booking, setBooking] = useState(null);
+    const [isCreatingBooking, setIsCreatingBooking] = useState(false);
     const handleBookingEdit = (booking) => setBooking(booking);
+
     const sendBookingRequest = () => {
-        console.log(booking);
+        const host = selectedConversation[0].host;
+        const performer = selectedConversation[0].performer;
+        const isHostSender = isHost;
+        const isRequest = true;
+        const request = booking;
+        const message = "";
+        
+        sendNewMessage(host, performer, isHostSender, isRequest, message, request).then(data => {
+            setNewMessage("");
+            selectConversation([... selectedConversation, data]);
+        }).then(handleCloseModal);
     }
 
     const handleSendBookingRequestClicked = () => {
         setBooking(null);
+        setIsCreatingBooking(true);
         handleShowModal();
     }
 
-    const handleViewBookingRequest = (message) => {
-        const bookingID = message.message;
-        getBookingByID(bookingID).then(res => {
-            let booking = res;
-            getVenueDetails(booking.venue).then(data => {
-                booking.venue = data;
-                setBooking(booking);
-            });
-        }); 
-        handleShowModal();
+    const handleViewBookingRequest = (request) => {
+        let bookingRequest = request;
+        getVenueDetails(bookingRequest.venue).then(data => {
+            bookingRequest.venue = data;
+            setBooking(bookingRequest);
+            setIsCreatingBooking(false);
+            handleShowModal();
+        });
     }
 
     const navigate = useNavigate();
@@ -62,6 +74,9 @@ export default function Messages() {
             setUserDetails(data);
             setIsHost(data.type.includes("host"));
             getAllConversations(user.uid, data.type.includes("host")).then(conversations => setConversations(conversations));
+            if (data.type.includes("host")) {
+                data.venues.forEach(venueID => getVenueDetails(venueID).then(venue => setHostVenues([... hostVenues, venue])));
+            }
         });
     }, [user, loading]);
 
@@ -86,10 +101,11 @@ export default function Messages() {
             const performer = selectedConversation[0].performer;
             const isHostSender = isHost;
             const isRequest = false;
+            const request = null;
             const message = newMessage;
             
 
-            sendNewMessage(host, performer, isHostSender, isRequest, message).then(data => {
+            sendNewMessage(host, performer, isHostSender, isRequest, message, request).then(data => {
                 setNewMessage("");
                 selectConversation([... selectedConversation, data]);
             });
@@ -175,13 +191,15 @@ export default function Messages() {
             </Modal.Header>
             <Modal.Body>
                 
-                <BookingOutline booking={booking} editable fieldsChanged={handleBookingEdit}/>
+                <BookingOutline booking={booking} fieldsChanged={handleBookingEdit} venues={hostVenues} isCreatingBooking={isCreatingBooking} />
 
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={sendBookingRequest}>
+
+                {isCreatingBooking && (<Button variant="primary" onClick={sendBookingRequest}>
                     Send
-                </Button>
+                </Button>)}
+                
                 <Button variant="secondary" onClick={handleCloseModal}>
                     Close
                 </Button>
@@ -216,7 +234,7 @@ function Message(props) {
         return (
             <div className="message-container">
                 <div className="message" style={{backgroundColor: 'gainsboro'}}>
-                    {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message)}>View Booking Request</Button>) : props.message.message}
+                    {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message.request)}>View Booking Request</Button>) : props.message.message}
                 </div>
                 <p className="message-time">{removeSeconds(props.message.time.toDate().toLocaleTimeString())}</p>
             </div>
@@ -228,7 +246,7 @@ function Message(props) {
                     <Row style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
 
                         <div className="message" style={{backgroundColor: 'orange', display: 'flex'}}>
-                            {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message)}>View Booking Request</Button>) : props.message.message}
+                            {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message.request)}>View Booking Request</Button>) : props.message.message}
                         </div>
 
                     </Row>

@@ -50,13 +50,13 @@ const getConversation = async (host, performer) => {
     }
 };
 
-const sendNewMessage = async (host, performer, isHostSender, isRequest, message) => {
+const sendNewMessage = async (host, performer, isHostSender, isRequest, message, request) => {
     try {
         const time = Timestamp.fromDate(new Date());
         const uid = UUID();
         const dc = doc(db, "/messages/", uid);
 
-        const entry = {host, performer, isHostSender, isRequest, message, uid, time};
+        const entry = {host, performer, isHostSender, isRequest, message, uid, time, request};
         await setDoc(dc, entry);
         
         return entry;

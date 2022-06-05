@@ -4,13 +4,10 @@ import { Container, Table, InputGroup, FormControl, Form, Dropdown, DropdownButt
 import "./BookingOutline.css";
 
 export default function BookingOutline(props) {
-    const editable = props.editable;
     const newBooking = true; //props.newBooking
-    const venues = ["the vic", "the adamson", "russacks"];
-
 
     // Modal state values
-    const [venue, setVenue] = useState(venues[0]);
+    const [venue, setVenue] = useState(props.venues[0]);
     const handleVenueChange = (venue) => setVenue(venue);
 
     const [notes, setNotes] = useState("");
@@ -45,7 +42,7 @@ export default function BookingOutline(props) {
 
     const callFieldsChanged = () => props.fieldsChanged({fee});
 
-    if (props.booking) {
+    if (!props.isCreatingBooking) {
         return (
             <Container className="w-100">
                 <Table>
@@ -59,15 +56,7 @@ export default function BookingOutline(props) {
 
                                 <b>Fee:</b><br />
                                 
-                                {editable && (
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Text>£</InputGroup.Text>
-                                        <FormControl aria-label="Amount (to the nearest pound)" value={props.booking.fee}/>
-                                        <InputGroup.Text>.00</InputGroup.Text>
-                                    </InputGroup>
-                                )}
-
-                                {!editable && "£" + props.booking.fee}
+                                £{props.booking.fee}
                             </td>
                         </tr>
                         <tr>
@@ -154,11 +143,11 @@ export default function BookingOutline(props) {
                                     <InputGroup className="mb-3">
                                         <DropdownButton
                                             variant="outline-secondary"
-                                            title={venue}
+                                            title={venue.name}
                                             id="input-group-dropdown-1"
                                         >
-                                            {venues.map((venue, index) => (
-                                                <Dropdown.Item key={index} onClick={() => handleVenueChange(venue)}>{venue}</Dropdown.Item>
+                                            {props.venues.map((venue, index) => (
+                                                <Dropdown.Item key={index} onClick={() => handleVenueChange(venue)}>{venue.name}</Dropdown.Item>
                                             ))}
                                         </DropdownButton>
                                     </InputGroup>
