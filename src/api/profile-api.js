@@ -1,17 +1,19 @@
 import { updateProfile } from "firebase/auth";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { auth } from "../firebase";
 
 const storage = getStorage();
 
-const getProfileImage = async (uid, image) => {
-    const pathReference = ref(storage, `users/${uid}/${image}`);
-    await getDownloadURL(pathReference).then((url) => {console.log(url); return url;});
+const getImage = async (uid, image) => {
+    const pathReference = storageRef(storage, `users/${uid}/${image}`);
+    let ret;
+    await getDownloadURL(pathReference).then(url => ret = url);
+    return ret;
 }
 
 const uploadProfilePhoto = async (uid, image) => {
     console.log(image);
-    const newImageRef = ref(storage, `users/${uid}/${image.name}`);
+    const newImageRef = storageRef(storage, `users/${uid}/${image.name}`);
 
     uploadBytes(newImageRef, image).then((snapshot) => {
         console.log('Uploaded profile photo.');
@@ -30,4 +32,4 @@ const uploadProfilePhoto = async (uid, image) => {
     });
 }
 
-export { getProfileImage, uploadProfilePhoto };
+export { getImage, uploadProfilePhoto };

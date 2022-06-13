@@ -17,6 +17,7 @@ import Profile from "./components/Profile";
 import BookingOutline from "./components/BookingOutline";
 import Settings from "./components/Settings";
 
+import "./theme.css";
 
 export default function App() {
   

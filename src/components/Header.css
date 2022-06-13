@@ -1,6 +1,3 @@
-@import url("../theme.css");
-@import "../theme.css";
-
 #header-nav {
     background-color: var(--bkg2);
 }

@@ -1,12 +1,12 @@
 @import url("../theme.css");
 @import "../theme.css";
 .orange-button {
-    color: orange;
-    border-color: orange;
+    color: var(--accent1);
+    border-color: var(--accent1);
     width: 100%;
 }
 
 .orange-button:hover {
-    background-color: orange;
+    background-color: var(--accent1);
     color: white;
 }
