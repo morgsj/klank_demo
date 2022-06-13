@@ -1,11 +1,6 @@
-#logout {
-    color: orange;
-    border-color: orange;
+@import url("../theme.css");
+@import "../theme.css";
+
+#header-nav {
+    background-color: var(--bkg2);
 }
-
-#logout:hover {
-    background-color: orange;
-    color: white;
-}
-
-

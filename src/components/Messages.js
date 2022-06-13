@@ -14,8 +14,8 @@ import "./Messages.css";
 
 import { getAllConversations, getConversation, sendNewMessage } from "../api/message-api";
 import { getUserDetails } from "../api/user-api";
-import { getBookingByID } from "../api/booking-api";
 import { getVenueDetails } from "../api/venue-api";
+import { Timestamp } from "firebase/firestore";
 
 export default function Messages() {
     const [user, loading, error] = useAuthState(auth);
@@ -33,7 +33,7 @@ export default function Messages() {
 
     const [booking, setBooking] = useState(null);
     const [isCreatingBooking, setIsCreatingBooking] = useState(false);
-    const handleBookingEdit = (booking) => setBooking(booking);
+    const handleBookingEdit = (booking) => {setBooking(booking); console.log(booking);}
 
     const sendBookingRequest = () => {
         const host = selectedConversation[0].host;
@@ -42,7 +42,11 @@ export default function Messages() {
         const isRequest = true;
         const request = booking;
         const message = "";
-        
+
+        request.startTime = Timestamp.fromDate(request.startTime);
+        request.endTime = Timestamp.fromDate(request.endTime);
+        request.date = Timestamp.fromDate(request.date);
+
         sendNewMessage(host, performer, isHostSender, isRequest, message, request).then(data => {
             setNewMessage("");
             selectConversation([... selectedConversation, data]);
@@ -55,8 +59,8 @@ export default function Messages() {
         handleShowModal();
     }
 
-    const handleViewBookingRequest = (request) => {
-        let bookingRequest = request;
+    const handleViewBookingRequest = (response) => {
+        let bookingRequest = response;
         getVenueDetails(bookingRequest.venue).then(data => {
             bookingRequest.venue = data;
             setBooking(bookingRequest);
@@ -104,7 +108,6 @@ export default function Messages() {
             const request = null;
             const message = newMessage;
             
-
             sendNewMessage(host, performer, isHostSender, isRequest, message, request).then(data => {
                 setNewMessage("");
                 selectConversation([... selectedConversation, data]);
@@ -151,9 +154,10 @@ export default function Messages() {
                                                 <h5>{messagerName}</h5>
 
                                                 {isHost && (
-                                                    <Button onClick={handleSendBookingRequestClicked}>Send Booking Request</Button>
+                                                    <Button variant="primary" onClick={handleSendBookingRequestClicked}>Send Booking Request</Button>
                                                 )}
                                             </div>
+
                                             {selectedConversation.map((message, index) => (<Message key={index} message={message} sentByCurrentUser={message.isHostSender == isHost} handleViewBookingRequest={handleViewBookingRequest}/>))}
 
                                             <div id="conversation-footer">

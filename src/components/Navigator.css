@@ -1,23 +1,8 @@
-/* .nav {
-    border-radius: 100%;
-}
-
-.nav:hover {
-    cursor: pointer;
-}
-
-.nav:hover:not(#logo) {
-    animation-name: fadeOnHover;
-    animation-duration: 1s;
-}
-
-.row {
-    margin: 5px;
-    display: flex;
-} */
+@import url("../theme.css");
+@import "../theme.css";
 
 .nav-icon {
-    color: gray;
+    color: var(--accent3);
     height: 6vw;
     min-height: 75;
     font-size: 2vw;

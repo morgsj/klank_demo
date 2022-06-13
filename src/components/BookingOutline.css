@@ -1,3 +1,5 @@
+@import url("../theme.css");
+@import "../theme.css";
 .orange-button {
     color: orange;
     border-color: orange;
