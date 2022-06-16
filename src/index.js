@@ -5,7 +5,7 @@ import './colours.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals'; 
 
-const getCurrentTheme = () => 'light'; //window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getCurrentTheme = () => 'dark'; //window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 function loadTheme(theme){
     const root = document.querySelector(':root');

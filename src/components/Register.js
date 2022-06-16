@@ -16,16 +16,21 @@ import { ButtonGroup, Form, ToggleButton, Button } from "react-bootstrap";
 
 function Register() {
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [name, setName] = useState("");
     const [user, loading, error] = useAuthState(auth);
     const [isHost, setIsHost] = useState(true);
 
     const history = useNavigate();
+
     const register = () => {
         if (!name) alert("Please enter name");
-        registerWithEmailAndPassword(name, email, password, [ isHost ? "host" : "performer" ]);
+        else if (password != confirmPassword) alert("Passwords must match");
+        else registerWithEmailAndPassword(name, email, password, [ isHost ? "host" : "performer" ], phone);
     };
+
     useEffect(() => {
         if (loading) return;
         if (user) history("/dashboard");
@@ -50,9 +55,16 @@ function Register() {
                     </Form.Group>
 
                     <Form.Group>
+                        <Form.Label>Phone (optional)</Form.Label>
+                        <Form.Control type="number" className="register-textBox" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone"></Form.Control>
+                    </Form.Group>
+
+                    <Form.Group>
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" className="register-textBox" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+                        <Form.Control type="password" className="register-textBox" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
                     </Form.Group>
+                    
 
                     <ButtonGroup id="user-type-selector">
 
@@ -82,7 +94,7 @@ function Register() {
                 <RegisterWithGoogle isHost={isHost} />
 
                 <div>
-                Already have an account? <Link to="/">Login</Link> now.
+                Already have an account? <Link to="/login">Login</Link> now.
                 </div>
             </div>
         </div>
@@ -96,7 +108,7 @@ function RegisterWithGoogle(props) {
         <Button variant="none" className="register-btn register-google" onClick={() => signInWithGoogle([ props.isHost ? "host" : "performer" ])}>
             <span>
                 <img id="google-logo" src={require("../images/google-logo.png")}/> 
-                Login with Google
+                Register with Google
             </span>
         </Button>
     );

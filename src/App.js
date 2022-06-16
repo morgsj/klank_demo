@@ -15,6 +15,7 @@ import Reset from "./components/Reset";
 import Calendar from "./components/Calendar";
 import Profile from "./components/Profile";
 import BookingOutline from "./components/BookingOutline";
+import Booking from "./components/Booking";
 import Settings from "./components/Settings";
 
 import "./theme.css";
@@ -33,9 +34,8 @@ export default function App() {
           <Route path="profile/:id" element={<Profile />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="booking/:bookingID" element={<Booking />} />
 
-          
-          <Route path="bi" element={<BookingOutline />} />
 
       </Routes>
     </BrowserRouter>

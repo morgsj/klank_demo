@@ -1,0 +1,13 @@
+#event-organiser-group {
+    border: 1px solid var(--accent1);
+    border-radius: 5px;
+}
+
+#organiser-name {
+    padding-right: 1vw;
+    padding-left: 1vw
+}
+
+.label {
+    margin-top: 2vh;
+}
