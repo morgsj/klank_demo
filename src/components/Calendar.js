@@ -38,7 +38,7 @@ export default function Calendar() {
             <Container className="m-0 p-0">
                 <Row>
                     <Col xs={1}>
-                        <Navigator />
+                        <Navigator uid={user ? user.uid : ""} />
                     </Col>
                     <Col xs={11}>
                         <Header title={"Calendar"}/>
@@ -48,20 +48,20 @@ export default function Calendar() {
                         <Table striped>
                             <thead>
                                 <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Venue</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Fee</th>
+                                    <th scope="col" className="calendar-cell">Date</th>
+                                    <th scope="col" className="calendar-cell">Venue</th>
+                                    <th scope="col" className="calendar-cell">Time</th>
+                                    <th scope="col" className="calendar-cell">Fee</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {events.map((event, index) => (
                                     <tr key={index}>
-                                        <td>{event.startTime.toDate().toLocaleDateString()}</td>
-                                        <td>{event.venue.name}</td>
-                                        <td>{event.startTime.toDate().toLocaleTimeString()} - {event.endTime.toDate().toLocaleTimeString()}</td>
-                                        <td>£{event.fee}</td>
+                                        <td className="calendar-cell">{event.startTime.toDate().toLocaleDateString()}</td>
+                                        <td className="calendar-cell">{event.venue.name}</td>
+                                        <td className="calendar-cell">{event.startTime.toDate().toLocaleTimeString()} - {event.endTime.toDate().toLocaleTimeString()}</td>
+                                        <td className="calendar-cell">£{event.fee}</td>
                                         <td>
                                             <Button type="button" className="details-button" onClick={() => handleShowModal(index)}>
                                                 Details

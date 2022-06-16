@@ -1,5 +1,3 @@
-@import url("../theme.css");
-@import "../theme.css";
 .sidebar-message {
     width: 100%;
     padding: 1vw;
@@ -29,11 +27,11 @@ hr {
 #conversation-col {
     padding: 0;
 
-    border: 1px solid gainsboro;
+    border: 1px solid var(--bkg2);
 }
 
 #conversation-header {
-    background-color: gainsboro;
+    background-color: var(--bkg2);
     width: 100%;
     padding: 1vh 1vw 1vh 1vw;
     margin: 0;
@@ -41,7 +39,7 @@ hr {
 
 .sidebar {
     padding: 0;
-    border: 1px solid gainsboro;
+    border: 1px solid var(--bkg2);
     min-height: 100%;
 }
 
@@ -60,13 +58,13 @@ hr {
 }
 
 #conversation-footer {
-    background-color: gainsboro;
+    background-color: var(--bkg2);
     width: 100%;
     margin: 0;
 }
 
 .new-message-box {
-    background-color: gainsboro;
+    background-color: var(--bkg2);
 }
 
 #send-icon {
@@ -79,4 +77,8 @@ hr {
 
 #inner-grid-row {
     height: 100%;
+}
+
+#messages-navbar {
+    background-color: var(--bkg2);
 }

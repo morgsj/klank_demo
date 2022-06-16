@@ -120,7 +120,7 @@ export default function Messages() {
         <Container className="m-0 p-0">
             <Row>
                 <div className="col-sm-1">
-                    <Navigator />
+                    <Navigator uid={user ? user.uid : ""} />
                 </div>
                 <div className="col-sm-11">
                     <Header title={"Messages"}/>
@@ -129,11 +129,11 @@ export default function Messages() {
                             <Row id="inner-grid-row">
                                 <div className="col-sm-3 sidebar">
 
-                                    <Navbar className="justify-content-between navbar-light w-100" style={{backgroundColor: "gainsboro"}}>
+                                    <Navbar className="justify-content-between navbar-light w-100" id="messages-navbar">
                                         <p className="m-3 p-0">Messages</p>
                                         
                                         <form className="form-inline my-2 my-lg-0">
-                                            <button className="btn" onClick={() => {}}>+</button>
+                                            <Button variant="outlined" onClick={() => {}}><b>+</b></Button>
                                         </form>
                                     </Navbar>
 
@@ -237,7 +237,7 @@ function Message(props) {
     if (!props.sentByCurrentUser) {
         return (
             <div className="message-container">
-                <div className="message" style={{backgroundColor: 'gainsboro'}}>
+                <div className="message" style={{backgroundColor: 'var(--accent4)'}}>
                     {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message.request)}>View Booking Request</Button>) : props.message.message}
                 </div>
                 <p className="message-time">{removeSeconds(props.message.time.toDate().toLocaleTimeString())}</p>
@@ -249,7 +249,7 @@ function Message(props) {
                 <Container>
                     <Row style={{display: 'flex', justifyContent: 'right', alignContent: 'right'}}>
 
-                        <div className="message" style={{backgroundColor: 'orange', display: 'flex'}}>
+                        <div className="message" style={{backgroundColor: 'var(--accent2)', display: 'flex'}}>
                             {props.message.isRequest ? (<Button variant="primary" onClick={() => props.handleViewBookingRequest(props.message.request)}>View Booking Request</Button>) : props.message.message}
                         </div>
 

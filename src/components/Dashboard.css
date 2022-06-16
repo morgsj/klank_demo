@@ -6,34 +6,36 @@
     align-content: center;
     justify-content: center;
 
+    border: 1px solid var(--accent4);
     border-radius: 10px;
-    background-color: rgb(233, 233, 233);
+    background-color: var(--accent4);
+    
     margin: max(1vh, 20px) 1vw max(1vh, 20px) 1vw;
     height: max(20vh, 150px);
     max-height: 200px;
 
     width: 100%;
 
-    box-shadow: 7px 7px black;
+    box-shadow: 7px 7px var(--accent3);
 
     cursor: pointer;
 }
 
 .dashboard-box:hover {
-    background-color: rgb(218, 217, 217);
+    background-color: var(--accent3);
 }
 
 .dashboard-icon {
     width: 100%;
     height: min(max(7vh, 50px), 5vw);
     min-height: 50px;
-    color: rgb(197, 197, 197);
+    color: var(--accent1);
     margin-top: min(1vh, 1vw);
     margin-bottom: min(2vh, 2vw);
 }
 
 .action-description {
-    color: rgb(151, 151, 151);
+    color: var(--text);
 }
 
 .action-message {

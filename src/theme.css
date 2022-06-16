@@ -1,7 +1,25 @@
-.btn-primary {
-    background-color: var(--accent1);
+.btn-secondary:not(:hover) {
+    background-color: transparent;
     border-color: var(--accent1);
-    color: white;
+    color: var(--text);
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent2);
+    border-color: var(--accent1);
+    color: var(--text);
+}
+
+body {
+    background-color: var(--bkg1);
+    color: var(--text);
+    font-family: 'Raleway', sans-serif;
+}
+
+.btn-primary:not(:hover) {
+    background-color: var(--accent1) !important;
+    border-color: var(--accent1) !important;
+    color: white !important;
 }
 
 .btn-primary:hover {
@@ -17,7 +35,6 @@
     opacity: 0.5;
 }
 
-body {
-    background-color: var(--bkg1);
-    color: var(--text);
+.btn-primary:focus, .btn-primary:active {
+    box-shadow: 0 0 10px 10px var(--accent2);
 }

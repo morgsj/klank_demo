@@ -11,6 +11,7 @@ import {
 } from "../api/auth-api";
 
 import "./Register.css";
+import { ButtonGroup, Form, ToggleButton, Button } from "react-bootstrap";
 
 
 function Register() {
@@ -31,58 +32,72 @@ function Register() {
     }, [user, loading]);
     return (
         <div className="register">
-        <div className="register__container">
-            {console.log(isHost)}
-            <input
-            type="text"
-            className="register__textBox"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Full Name"
-            />
-            <input
-            type="text"
-            className="register__textBox"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="E-mail Address"
-            />
-            <input
-            type="password"
-            className="register__textBox"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            />
+            <div className="register-container">
+                
+                <div className="logo-container">
+                    <img id="login-logo" src={require("../images/logo_transparent.png")}/>
+                </div>
 
-            <div className="form-check">
-                <input className="form-check-input" type="radio" name="radios" id="host-radio" value="option1" checked={isHost} onChange={() => setIsHost(true)}/>
-                <label className="form-check-label" htmlFor="radios1">
-                    Register as a host
-                </label>
-            </div>
-            <div className="form-check">
-                <input className="form-check-input" type="radio" name="radios" id="performer-radio" value="option2" checked={!isHost} onChange={() => setIsHost(false)}/>
-                <label className="form-check-label" htmlFor="radios2">
-                    Register as a performer
-                </label>
-            </div>
+                <Form>
+                    <Form.Group>
+                        <Form.Label>Full Name</Form.Label>
+                        <Form.Control type="text" className="register-textBox" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" /> 
+                    </Form.Group>
 
-            <button className="register__btn" onClick={register}>
-            Register
-            </button>
-            <button
-            className="register__btn register__google"
-            onClick={() => signInWithGoogle([ isHost ? "host" : "performer" ])}
-            >
-            Register with Google
-            </button>
-            <div>
-            Already have an account? <Link to="/">Login</Link> now.
+                    <Form.Group>
+                        <Form.Label>E-mail Address</Form.Label>
+                        <Form.Control type="text" className="register-textBox" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail Address" />
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" className="register-textBox" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+                    </Form.Group>
+
+                    <ButtonGroup id="user-type-selector">
+
+                        <ToggleButton
+                            type="checkbox"
+                            variant={isHost ? "primary" : "secondary"}
+                            checked={isHost}
+                            onClick={() => setIsHost(true)}
+                        >
+                            Host
+                        </ToggleButton>
+                        <ToggleButton
+                            type="checkbox"
+                            variant={!isHost ? "primary" : "secondary"}
+                            checked={!isHost}
+                            onClick={() => setIsHost(false)}
+                        >
+                            Performer
+                        </ToggleButton>
+                    </ButtonGroup>
+                </Form>
+
+                <Button variant="primary" className="register-btn" onClick={register}>
+                    Register
+                </Button>
+                
+                <RegisterWithGoogle isHost={isHost} />
+
+                <div>
+                Already have an account? <Link to="/">Login</Link> now.
+                </div>
             </div>
-        </div>
         </div>
     );
 }
 
 export default Register;
+
+function RegisterWithGoogle(props) {
+    return (
+        <Button variant="none" className="register-btn register-google" onClick={() => signInWithGoogle([ props.isHost ? "host" : "performer" ])}>
+            <span>
+                <img id="google-logo" src={require("../images/google-logo.png")}/> 
+                Login with Google
+            </span>
+        </Button>
+    );
+}

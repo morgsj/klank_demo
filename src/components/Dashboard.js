@@ -35,7 +35,7 @@ export default function Dashboard() {
         <div className="container m-0 p-0">
             <div className="row">
                 <div className="col-sm-1">
-                    <Navigator />
+                    <Navigator uid={user ? user.uid : ""} />
                 </div>
                 <div className="col-sm-11">
                     <Header title={"Dashboard "}/>

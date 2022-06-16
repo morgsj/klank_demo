@@ -35,3 +35,13 @@
 .star {
     color: orange;
 }
+
+#avatar-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#email {
+    color: var(--accent3);
+}

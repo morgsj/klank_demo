@@ -30,7 +30,7 @@ export default function App() {
           <Route path="messages" element={<Messages />} />
           <Route path="search" element={<Search />} />
           <Route path="reset" element={<Reset />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile/:id" element={<Profile />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />
 

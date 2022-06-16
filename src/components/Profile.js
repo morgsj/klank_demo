@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../firebase";
 
 import Navigator from "./Navigator";
@@ -17,7 +17,9 @@ import { Star, StarFill } from "react-bootstrap-icons";
 
 import { Button, Carousel } from "react-bootstrap";
 
-export default function Calendar() {
+export default function Profile() {
+    const { id } = useParams(); 
+
     const [user, loading, error] = useAuthState(auth);
 
     const [selectedFile, setSelectedFile] = useState();
@@ -27,9 +29,11 @@ export default function Calendar() {
 
     const [portfolioData, setPortfolioData] = useState([]);
 
-    const [userDetails, setUserDetails] = useState(null);
+    const [profileDetails, setProfileDetails] = useState(null);
     const [hostVenues, setHostVenues] = useState([]);
     const [isHost, setIsHost] = useState(false);
+
+    const [averageReview, setAverageReview] = useState(0);
 
     const navigate = useNavigate();
 
@@ -37,17 +41,23 @@ export default function Calendar() {
         if (loading) return;
         if (!user) return navigate("/login");
         
-        getUserDetails(user.uid).then((data) => {
-            setUserDetails(data);
+        getUserDetails(id).then((data) => {
+            setProfileDetails(data);
             setIsHost(data.type.includes("host"));
+            //setProfilePhotoURL(data.photoURL);
             if (data.type.includes("host")) {
                 data.venues.forEach(venueID => getVenueDetails(venueID).then(venue => setHostVenues([... hostVenues, venue])));
             } else {
                 getPortfolioImageURLs(data.portfolio).then(pd => setPortfolioData(pd));
             }
+
+            let total = 0;
+            data.reviews.forEach(review => total += review.rating);
+            setAverageReview(total / data.reviews.length);
+
+            getImage(data.uid, data.photoURL).then(url => setProfilePhotoURL(url));
         });
 
-        setProfilePhotoURL(user.photoURL);
     }, [user, loading]);
 
     const getPortfolioImageURLs = async (portfolio) => {
@@ -75,7 +85,7 @@ export default function Calendar() {
         <div className="container m-0 p-0">
             <div className="row">
                 <div className="col-sm-1">
-                    <Navigator />
+                    <Navigator uid={user ? user.uid : ""} />
                 </div>
                 <div className="col-sm-11">
                     <Header title={"Profile"} />
@@ -85,35 +95,34 @@ export default function Calendar() {
                             <Col xs={4}>
                                 <div id="profile-box">
 
-                                    {user && (<>
-                                        
+                                    {profileDetails && (<>
                                         <Container>
-                                            <Row>
+                                            <Row id="avatar-container">
                                                 <img src={profilePhotoURL} className="rounded-circle" id="avatar" alt="Avatar" />
                                             </Row>
                                             <Row>
                                                 
-                                                <Col>
-                                                    <h5 id="name">{user.displayName}</h5>
+                                                <Col xs={8}>
+                                                    <h5 id="name">{profileDetails.name}</h5>
                                                 </Col>
                                                 <Col>
                                                     <p id="user-type"><b>{isHost ? "Host" : "Artist"}</b></p>
                                                 </Col>
-                                                <br /><p id="email">{user.email}</p>
+                                                <br /><p id="email">{profileDetails.email}</p>
                                             </Row>
                                             <Row>
                                                 <p>Bath, England - about 5 miles away</p>
                                             </Row>
                                             <Row>
                                                 
-                                            <span>{Array(3).fill((<StarFill className="star" />))}
-                                                    {Array(5 - 3).fill((<Star className="star" />))}</span>
+                                            <span>{Array(averageReview).fill((<StarFill className="star" />))}
+                                                    {Array(5 - averageReview).fill((<Star className="star" />))}</span>
 
-                                                <p>13 reviews</p>
+                                                <p>{profileDetails.reviews.length} review(s)</p>
                                             </Row>
                                             <hr />
                                             <Row>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                                                <p>{profileDetails.description}</p>
                                             </Row>
                                             <hr />
                                             <Row>
@@ -147,7 +156,7 @@ export default function Calendar() {
 
                                 <h3 id="review-title">Reviews</h3>
 
-                                {userDetails.reviews.map(review => (<Review reviewer={review.reviewer} rating={review.rating} comment={review.comment}/>))}
+                                {profileDetails && profileDetails.reviews.map((review, index) => (<Review key={index} reviewer={review.reviewer} rating={review.rating} comment={review.comment}/>))}
                             </Col>
                         </Row>
                     </Container>

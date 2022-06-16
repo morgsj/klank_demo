@@ -20,7 +20,6 @@ export default function Search() {
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/login");
-        console.log(user);
     }, [user, loading]);
 
     const handleNameInputChange = e => {
@@ -33,7 +32,7 @@ export default function Search() {
         <div className="container m-0 p-0">
             <div className="row">
                 <div className="col-sm-1">
-                    <Navigator />
+                    <Navigator uid={user ? user.uid : ""} />
                 </div>
                 <div className="col-sm-11">
                     <Header title={"Settings"}/>

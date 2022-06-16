@@ -1,23 +1,11 @@
-@import url("../theme.css");
-@import "../theme.css";
-.details-button {
-    color: orange;
-    border-color: orange;
-    background-color: transparent;
-}
-
-.details-button:hover {
-    background-color: orange;
-    border-color: transparent;
-    color: white;
-}
-
-
 #bookingModal {
     padding: 5%;
 }
 
 #booking-modal-body {
-
     max-width: 100%;
+}
+
+.calendar-cell {
+    color: var(--text);
 }
