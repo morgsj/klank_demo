@@ -2,13 +2,19 @@ import {
     getDocs,
     where,
     query,
+    setDoc,
+    doc,
+    arrayUnion,
+    updateDoc
 } from "firebase/firestore";
 
 import {
     db,
-    bookingsRef,
     venuesRef
 } from "../firebase";
+
+import { v4 as UUID } from 'uuid';
+
 
 const getVenueDetails = async (uid) => {
     try {
@@ -26,5 +32,32 @@ const getVenueDetails = async (uid) => {
     }
 };
 
+const populateVenueDetails = async (venueIDs) => {
+    let venues = [];
+    for (let i = 0; i < venueIDs.length; i++) {
+        await getVenueDetails(venueIDs[i]).then(data => venues.push(data));
+    }
+    return venues;
+}
 
-export { getVenueDetails };
+const createNewVenue = async (venue) => {
+    console.log("createNewVenue");
+    try {
+        const uid = UUID();
+        const dc = doc(db, "/venues/", uid);
+
+        const entry = venue; entry["uid"] = uid;
+        await setDoc(dc, entry);
+        
+        const userDoc = doc(db, "/users/", venue.organiser);
+        await updateDoc(userDoc, {
+            venues: arrayUnion(uid)
+        });
+
+        return entry;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export { getVenueDetails, populateVenueDetails, createNewVenue };

@@ -11,3 +11,9 @@
 .label {
     margin-top: 2vh;
 }
+
+.small-print {
+    color: var(--accent3);
+    font-size: 14px;
+    margin-top: 0;
+}

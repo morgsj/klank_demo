@@ -34,7 +34,3 @@ body {
     color: white;
     opacity: 0.5;
 }
-
-.btn-primary:focus, .btn-primary:active {
-    box-shadow: 0 0 10px 10px var(--accent2);
-}

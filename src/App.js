@@ -16,6 +16,7 @@ import Calendar from "./components/Calendar";
 import Profile from "./components/Profile";
 import BookingOutline from "./components/BookingOutline";
 import Booking from "./components/Booking";
+import Venue from "./components/Venue";
 import Settings from "./components/Settings";
 
 import "./theme.css";
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />
           <Route path="booking/:bookingID" element={<Booking />} />
+          <Route path="venue/:venueID" element={<Venue />} />
 
 
       </Routes>
