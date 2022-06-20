@@ -20,6 +20,8 @@ import {
     where,
     addDoc,
     query,
+    doc,
+    setDoc,
 } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
@@ -31,13 +33,15 @@ const signInWithGoogle = async (type) => {
         const docs = await getDocs(q);
         
         if (docs.docs.length === 0) {
-            await addDoc(usersRef, {
+            const dc = doc(db, "/users/", user.uid);
+            await setDoc(dc, {
                 uid: user.uid,
                 name: user.displayName,
                 authProvider: "google",
                 email: user.email,
                 type: type,
                 location: [0.0, 0.0],
+                reviews: []
             });
         }
     } catch (err) {
@@ -59,15 +63,19 @@ const registerWithEmailAndPassword = async (name, email, password, type, phone) 
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
-        await addDoc(usersRef, {
+        
+        const dc = doc(db, "/users/", user.uid);
+        await setDoc(dc, {
             uid: user.uid,
             name,
             authProvider: "local",
             email,
             type,
             location: [0.0, 0.0],
-            phone
+            phone,
+            reviews: []
         });
+
     } catch (err) {
         console.error(err);
         alert(err.message);

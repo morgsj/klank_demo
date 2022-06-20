@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { auth } from "../firebase";
 
 import Navigator from "./Navigator";
@@ -111,7 +111,7 @@ export default function Profile() {
                                                 <br /><p id="email">{profileDetails.email}</p>
                                             </Row>
                                             <Row>
-                                                <p>Bath, England - about 5 miles away</p>
+                                                <p>Location - about X miles away</p>
                                             </Row>
                                             <Row>
                                                 
@@ -136,23 +136,8 @@ export default function Profile() {
                             </Col>
                             <Col xs={8}>
                                 
-                                <h3 id="portfolio-title">Portfolio</h3>
-
-                                <Carousel id="carousel">
-                                    {portfolioData.map((item, index) => (
-                                        <Carousel.Item key={index}>
-                                            <img
-                                            className="d-block w-100"
-                                            src={item.url}
-                                            alt={item.url}
-                                            />
-                                            <Carousel.Caption>
-                                                <p>{item.description}</p>
-                                            </Carousel.Caption>
-                                        </Carousel.Item>
-                                    ))}
-
-                                </Carousel>
+                                {isHost && <VenuesList data={profileDetails.venues} />}
+                                {!isHost && <Portfolio data={portfolioData}/>}
 
                                 <h3 id="review-title">Reviews</h3>
 
@@ -183,3 +168,37 @@ const Review = (props) => (
         </Row>
     </Container>
 );
+
+const VenuePreview = (props) => (
+    <Container className="venue-preview">
+        <p><b>{props.id}</b></p>
+    </Container>
+);
+
+const VenuesList = (props) => (<>
+
+    <h3 id="portfolio-title">Venues</h3>
+
+    {props.data.map((venueID, index) => (<Link to={`/venue/${venueID}`}><VenuePreview key={index} id={venueID} /></Link>))}
+
+</>);
+
+const Portfolio = (props) => (<>
+        <h3 id="portfolio-title">Portfolio</h3>
+
+        <Carousel id="carousel">
+            {props.data.map((item, index) => (
+                <Carousel.Item key={index}>
+                    <img
+                    className="d-block w-100"
+                    src={item.url}
+                    alt={item.url}
+                    />
+                    <Carousel.Caption>
+                        <p>{item.description}</p>
+                    </Carousel.Caption>
+                </Carousel.Item>
+            ))}
+
+        </Carousel>
+</>);

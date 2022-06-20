@@ -32,6 +32,12 @@
     padding: max(min(2vw, 2vh), 15px);
 }
 
+.venue-preview {
+    border: 2px solid var(--accent3);
+    border-radius: 10px;
+    padding: max(min(2vw, 2vh), 15px);
+}
+
 .star {
     color: orange;
 }

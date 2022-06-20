@@ -34,6 +34,8 @@ export default function Booking() {
         createNewVenue(venue).then(() => navigate("/calendar"));
     }
 
+    console.log(user);
+
     return (
         <Container className="m-0 p-0">
             <Row>

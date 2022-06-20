@@ -6,14 +6,24 @@ import { auth, db, logout } from "../firebase";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
-import "./Search.css";
+import "./Settings.css";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+
+import { useFilePicker } from 'use-file-picker';
+import { uploadProfilePhoto } from "../api/profile-api";
 
 export default function Search() {
     const [user, loading, error] = useAuthState(auth);
 
-    const [nameInput, setNameInput] = useState(user.displayName);
+    const [nameInput, setNameInput] = useState("");
+
+    const [profilePhotoURL, setProfilePhotoURL] = useState("");
 
     const [hasMadeChanges, setHasMadeChanges] = useState({});
+
+    const [openFileSelector, { filesContent, fileSelectorLoading }] = useFilePicker({
+        accept: '.png',
+    });
 
     const navigate = useNavigate();
 
@@ -28,6 +38,21 @@ export default function Search() {
         // canSave();
     }
 
+    const handleChangePhoto = e => {
+        openFileSelector();
+    }
+
+
+    if (fileSelectorLoading) {
+        return <>Loading</>;
+    }
+
+    // if (filesContent.length > 0) {
+    //     // we have a new profile image
+    //     uploadProfilePhoto(user.uid, filesContent[0]);
+    //     filesContent = [];
+    // }
+
     return (
         <div className="container m-0 p-0">
             <div className="row">
@@ -41,36 +66,31 @@ export default function Search() {
                         <button className="btn btn-primary" disabled={hasMadeChanges}>Save</button>
                     </div>
 
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                Name
-                            </div>
-                            <div className="col">
-                                <input type="text" value={nameInput} onChange={handleNameInputChange} />
-                            </div>
-                        </div>
+                    <Form>
 
-                        <div className="row">
-                            <div className="col">
-                                Date of Birth
+                        <Form.Group>
+                            <div id="avatar-container">
+                                <img src={profilePhotoURL} className="rounded-circle" id="avatar" alt="Avatar" />
                             </div>
-                            <div className="col">
-                                <input type="text" />
-                            </div>
-                        </div>
+                            <Button variant="secondary" onClick={handleChangePhoto}>Change Photo</Button>
+                            
+                            <Button variant="secondary">Remove Photo</Button>
+                        </Form.Group>
 
-                        <div className="row">
-                            <div className="col">
-                                Location
-                            </div>
-                            <div className="col">
-                                <input type="text" />
-                            </div>
-                        </div>
+                        <Form.Group>
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="text" value={nameInput} onChange={handleNameInputChange} placeholder="Name" />
+                        </Form.Group>
 
-                    </div>
+                        <Form.Group>
+                            <Form.Label>Date of Birth</Form.Label>
+                            <Form.Control type="date"/>
+                        </Form.Group>
 
+
+                    </Form>
+
+                    <Button onClick={() => navigate("/venue/new-venue")}>Add Venue</Button>
                 </div>
             </div>
         </div>
