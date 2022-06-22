@@ -76,11 +76,12 @@ export default function Messages() {
         if (!user) return navigate("/login");
         else getUserDetails(user.uid).then((data) => {
             setUserDetails(data);
+            
             setIsHost(data.type.includes("host"));
+            setHostVenues(data.venues);
+
             getAllConversations(user.uid, data.type.includes("host")).then(conversations => setConversations(conversations));
-            if (data.type.includes("host")) {
-                data.venues.forEach(venueID => getVenueDetails(venueID).then(venue => setHostVenues([... hostVenues, venue])));
-            }
+            
         });
     }, [user, loading]);
 

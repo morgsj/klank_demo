@@ -6,7 +6,7 @@ import { auth } from "../firebase";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
-import { uploadProfilePhoto, getImage } from "../api/profile-api";
+import { uploadProfilePhoto, getImage, getPortfolioImageURLs } from "../api/profile-api";
 import { getUserDetails } from "../api/user-api";
 import { getVenueDetails } from "../api/venue-api";
 
@@ -48,7 +48,7 @@ export default function Profile() {
             if (data.type.includes("host")) {
                 data.venues.forEach(venueID => getVenueDetails(venueID).then(venue => setHostVenues([... hostVenues, venue])));
             } else {
-                getPortfolioImageURLs(data.portfolio).then(pd => setPortfolioData(pd));
+                getPortfolioImageURLs(user.uid, data.portfolio).then(pd => setPortfolioData(pd));
             }
 
             let total = 0;
@@ -59,18 +59,6 @@ export default function Profile() {
         });
 
     }, [user, loading]);
-
-    const getPortfolioImageURLs = async (portfolio) => {
-        let pd = [];
-        let filename; let description;
-        for (let i = 0; i < portfolio.length; i++) {
-            filename = portfolio[i].fileName;
-            description = portfolio[i].description;
-
-            await getImage(user.uid, filename).then(url => pd.push({url, description}));
-        }
-        return pd;
-    }
 
     const changeProfileFile = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -170,16 +158,28 @@ const Review = (props) => (
 );
 
 const VenuePreview = (props) => (
-    <Container className="venue-preview">
-        <p><b>{props.id}</b></p>
-    </Container>
+    <Link to={`/venue/${props.venue.uid}`}className="venue-preview-link">
+        <Container className="venue-preview">
+
+            <Row>
+                <Col>
+                    <img src={require("../images/crowd.jpg")} className="venue-image"></img>
+                </Col>
+                <Col>
+                    <p><b>{props.venue.name}</b></p>
+                    <p>{props.venue.address.postcode}</p>
+                </Col>
+            </Row>
+
+        </Container>
+    </Link>
 );
 
 const VenuesList = (props) => (<>
 
     <h3 id="portfolio-title">Venues</h3>
 
-    {props.data.map((venueID, index) => (<Link to={`/venue/${venueID}`}><VenuePreview key={index} id={venueID} /></Link>))}
+    {props.data.map((venue, index) => (<VenuePreview key={index} venue={venue} />))}
 
 </>);
 

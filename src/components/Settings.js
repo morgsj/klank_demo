@@ -2,35 +2,55 @@ import React, { useEffect, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db, logout } from "../firebase";
+import { auth } from "../firebase";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
 import "./Settings.css";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
 import { useFilePicker } from 'use-file-picker';
-import { uploadProfilePhoto } from "../api/profile-api";
+import { deleteUserPhoto, removeProfilePhoto, uploadProfilePhoto } from "../api/profile-api";
+import { getUserDetails } from "../api/user-api";
 
-export default function Search() {
+export default function Settings() {
     const [user, loading, error] = useAuthState(auth);
+    const [userDetails, setUserDetails] = useState(null);
 
     const [nameInput, setNameInput] = useState("");
 
     const [profilePhotoURL, setProfilePhotoURL] = useState("");
+    const [profilePhotoFilename, setProfilePhotoFilename] = useState("");
 
     const [hasMadeChanges, setHasMadeChanges] = useState({});
 
-    const [openFileSelector, { filesContent, fileSelectorLoading }] = useFilePicker({
-        accept: '.png',
+    const [openFileSelector, { plainFiles, fileSelectorLoading }] = useFilePicker({
+        accept: ['.png', '.jpg', '.PNG', '.JPG'],
+        // readFilesContent: false,
+        limitFilesConfig: {max: 1},
     });
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (loading) return;
+        if (loading || fileSelectorLoading) return;
         if (!user) return navigate("/login");
-    }, [user, loading]);
+        setProfilePhotoURL(user.photoURL);
+        getUserDetails(user.uid).then(data => {
+            console.log(data);
+            setUserDetails(data);
+            setProfilePhotoFilename(data.photo);
+        });
+    }, [user, loading, fileSelectorLoading]);
+
+    useEffect(() => {
+        if (plainFiles.length) {
+            console.log(plainFiles[0].name);
+            deleteUserPhoto(user.uid, profilePhotoFilename);
+            uploadProfilePhoto(user.uid, plainFiles[0]).then(url => setProfilePhotoURL(url));
+            setProfilePhotoFilename(plainFiles[0].name);
+        }
+    }, [plainFiles]);
 
     const handleNameInputChange = e => {
         setHasMadeChanges(e.target.value == user.displayName);
@@ -38,20 +58,11 @@ export default function Search() {
         // canSave();
     }
 
-    const handleChangePhoto = e => {
-        openFileSelector();
-    }
-
-
-    if (fileSelectorLoading) {
-        return <>Loading</>;
-    }
-
-    // if (filesContent.length > 0) {
-    //     // we have a new profile image
-    //     uploadProfilePhoto(user.uid, filesContent[0]);
-    //     filesContent = [];
-    // }
+    const handleChangePhoto = () => openFileSelector();
+    const handleRemovePhoto = () => {
+        removeProfilePhoto(user.uid, profilePhotoFilename);
+        setProfilePhotoFilename("");
+    };
 
     return (
         <div className="container m-0 p-0">
@@ -74,7 +85,7 @@ export default function Search() {
                             </div>
                             <Button variant="secondary" onClick={handleChangePhoto}>Change Photo</Button>
                             
-                            <Button variant="secondary">Remove Photo</Button>
+                            <Button variant="secondary" onClick={handleRemovePhoto}>Remove Photo</Button>
                         </Form.Group>
 
                         <Form.Group>

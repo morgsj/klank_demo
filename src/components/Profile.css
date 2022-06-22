@@ -51,3 +51,13 @@
 #email {
     color: var(--accent3);
 }
+
+.venue-preview-link {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.venue-image {
+    height: 10vh;
+    width: auto;
+}
