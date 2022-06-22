@@ -15,30 +15,33 @@ const getImage = async (uid, image) => {
 const uploadProfilePhoto = async (uid, image) => {
     const newImageRef = storageRef(storage, `users/${uid}/${image.name}`);
 
-    uploadBytes(newImageRef, image).then((snapshot) => {
-        console.log('Uploaded profile photo.');
+    let returnValue;
+    await uploadBytes(newImageRef, image).then(async () => {
         
-        getDownloadURL(newImageRef).then(function(url) {        
+        await getDownloadURL(newImageRef).then(async (url) => {        
             // Now you have valid `imageURL` from async call
             var user = auth.currentUser;
 
             const userRef = doc(db, `/users/${uid}`);
             updateDoc(userRef, { photo: image.name }).then(() => console.log("updated profile"));
 
-            updateProfile(user, { photoURL: url })
-            .then(() => { console.log(user); return url; })
-            .catch((error) => { console.log(error) });
+
+            await updateProfile(user, { photoURL: url })
+            .then(() => { console.log(user); returnValue = url; })
+            .catch(error => console.log(error));
 
         })
-        .catch((error) => { console.log(error) });
+        .catch(error => console.log(error));
 
     });
+    return returnValue;
 }
 
 const deleteUserPhoto = async (uid, filename) => {
-    const imageRef = storageRef(storage, `users/${uid}/${filename}`);
+    console.log(`/users/${uid}/${filename}`);
+    const imageRef = storageRef(storage, `/users/${uid}/${filename}`);
     deleteObject(imageRef).then((res) => {
-        console.log(res)
+        console.log(res);
     }).catch((error) => {
         console.log(error);
         return error;

@@ -10,7 +10,7 @@ import "./Settings.css";
 import { Button, Form } from "react-bootstrap";
 
 import { useFilePicker } from 'use-file-picker';
-import { deleteUserPhoto, removeProfilePhoto, uploadProfilePhoto } from "../api/profile-api";
+import { deleteUserPhoto, getImage, removeProfilePhoto, uploadProfilePhoto } from "../api/profile-api";
 import { getUserDetails } from "../api/user-api";
 
 export default function Settings() {
@@ -37,7 +37,6 @@ export default function Settings() {
         if (!user) return navigate("/login");
         setProfilePhotoURL(user.photoURL);
         getUserDetails(user.uid).then(data => {
-            console.log(data);
             setUserDetails(data);
             setProfilePhotoFilename(data.photo);
         });
@@ -45,8 +44,7 @@ export default function Settings() {
 
     useEffect(() => {
         if (plainFiles.length) {
-            console.log(plainFiles[0].name);
-            deleteUserPhoto(user.uid, profilePhotoFilename);
+            if (profilePhotoFilename) deleteUserPhoto(user.uid, profilePhotoFilename);
             uploadProfilePhoto(user.uid, plainFiles[0]).then(url => setProfilePhotoURL(url));
             setProfilePhotoFilename(plainFiles[0].name);
         }
@@ -62,6 +60,7 @@ export default function Settings() {
     const handleRemovePhoto = () => {
         removeProfilePhoto(user.uid, profilePhotoFilename);
         setProfilePhotoFilename("");
+        setProfilePhotoURL("");
     };
 
     return (
@@ -85,7 +84,7 @@ export default function Settings() {
                             </div>
                             <Button variant="secondary" onClick={handleChangePhoto}>Change Photo</Button>
                             
-                            <Button variant="secondary" onClick={handleRemovePhoto}>Remove Photo</Button>
+                            <Button variant="secondary" onClick={handleRemovePhoto} disabled={!profilePhotoURL}>Remove Photo</Button>
                         </Form.Group>
 
                         <Form.Group>
