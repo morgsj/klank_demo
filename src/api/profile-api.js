@@ -56,7 +56,9 @@ const removeProfilePhoto = async (uid, filename) => {
     localStorage.setItem("userDetails", JSON.stringify(userDetails));
 
     const userRef = doc(db, `/users/${uid}`);
-    updateDoc(userRef, { photo: "" }).then(() => console.log("profile photo removed"));
+    updateDoc(userRef, { photo: "" }).catch(error => console.log(error));
+    updateProfile(auth.currentUser, { photoURL: null }).catch(error => console.log(error));
+
 }
 
 const getPortfolioImageURLs = async (uid, portfolio) => {

@@ -46,7 +46,7 @@ export default function Profile() {
             setIsHost(data.type.includes("host"));
             //setProfilePhotoURL(data.photoURL);
             if (data.type.includes("host")) {
-                data.venues.forEach(venueID => getVenueDetails(venueID).then(venue => setHostVenues([... hostVenues, venue])));
+                setHostVenues(data.venues);
             } else {
                 getPortfolioImageURLs(user.uid, data.portfolio).then(pd => setPortfolioData(pd));
             }
@@ -54,9 +54,10 @@ export default function Profile() {
             let total = 0;
             data.reviews.forEach(review => total += review.rating);
             setAverageReview(total / data.reviews.length);
-
-            getImage(data.uid, data.photoURL).then(url => setProfilePhotoURL(url));
         });
+
+        
+        setProfilePhotoURL(user.photoURL);
 
     }, [user, loading]);
 
@@ -103,8 +104,8 @@ export default function Profile() {
                                             </Row>
                                             <Row>
                                                 
-                                            <span>{Array(averageReview).fill((<StarFill className="star" />))}
-                                                    {Array(5 - averageReview).fill((<Star className="star" />))}</span>
+                                            <span>{Array(averageReview).fill(0).map((value, index) => (<StarFill key={index} className="star" />))}
+                                                    {Array(5 - averageReview).fill(0).map((value, index) => (<Star key={index} className="star" />))}</span>
 
                                                 <p>{profileDetails.reviews.length} review(s)</p>
                                             </Row>
@@ -147,8 +148,8 @@ const Review = (props) => (
                 <p><b>{props.reviewer.name}</b></p>
             </Col>
             <Col>
-                <p>{Array(props.rating).fill((<StarFill className="star" />))}
-                {Array(5 - props.rating).fill((<Star className="star" />))}</p>
+                <p>{Array(props.rating).fill(0).map((value, index) => (<StarFill key={index} className="star" />))}
+                {Array(5 - props.rating).fill(0).map((value, index) => (<Star key={index} className="star" />))}</p>
             </Col>
         </Row>
         <Row>
