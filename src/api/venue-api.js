@@ -15,6 +15,9 @@ import {
 
 import { v4 as UUID } from 'uuid';
 
+import { getDownloadURL, ref as storageRef, getStorage, uploadBytes } from "firebase/storage";
+
+const storage = getStorage();
 
 const getVenueDetails = async (uid) => {
     try {
@@ -60,4 +63,23 @@ const createNewVenue = async (venue) => {
     }
 }
 
-export { getVenueDetails, populateVenueDetails, createNewVenue };
+const uploadVenuePhoto = async (venueID, image) => {
+    const newImageRef = storageRef(storage, `venues/${venueID}/${image.name}`);
+
+    await uploadBytes(newImageRef, image).then(async () => {
+        
+        await getDownloadURL(newImageRef).then(async (url) => {
+
+            const venueDoc = doc(db, "/venues/", venueID);
+            await updateDoc(venueDoc, {
+                photos: arrayUnion(url)
+            });
+            
+            return url;
+        })
+        .catch(error => console.log(error));
+
+    });
+}
+
+export { getVenueDetails, populateVenueDetails, createNewVenue, uploadVenuePhoto };

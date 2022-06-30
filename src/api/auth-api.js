@@ -51,12 +51,7 @@ const signInWithGoogle = async (type) => {
 };
 
 const logInWithEmailAndPassword = async (email, password) => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+    await signInWithEmailAndPassword(auth, email, password);
 };
 
 const registerWithEmailAndPassword = async (name, email, password, type, phone) => {
@@ -96,10 +91,30 @@ const logout = () => {
     signOut(auth);
 };
 
+const mapUserErrorCode = (code) => {
+    switch (code) {
+        case "auth/email-already-exists":
+            return "An email with that account already exists";
+        case "auth/invalid-email":
+            return "Please enter a valid email address";
+        case "auth/invalid-password":
+            return "Invalid password: your password must be 6 characters or more";
+        case "auth/user-not-found":
+            return "User not found - please register"; 
+        case "auth/internal-error":
+            return "Internal error. Please try again later.";
+        case "auth/wrong-password":
+            return "Wrong password";
+        default:
+            return "There was an error in authorisation. Please try again later.";
+    }
+}
+
 export {
     signInWithGoogle,
     logInWithEmailAndPassword,
     registerWithEmailAndPassword,
     sendPasswordReset,
-    logout
+    logout,
+    mapUserErrorCode
 }

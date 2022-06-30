@@ -56,3 +56,8 @@
     max-width: 2.5vw;
     margin-right: 0.5vw;
 }
+
+#error-message {
+    color: var(--error);
+    word-wrap: normal;
+}

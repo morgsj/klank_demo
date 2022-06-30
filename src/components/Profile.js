@@ -6,8 +6,7 @@ import { auth } from "../firebase";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
-import { uploadProfilePhoto, getImage, getPortfolioImageURLs } from "../api/profile-api";
-import { getUserDetails } from "../api/user-api";
+import { getUserDetails, uploadProfilePhoto, getImage, getPortfolioImageURLs } from "../api/user-api";
 import { getVenueDetails } from "../api/venue-api";
 
 import { Col, Container, Row } from "react-bootstrap";

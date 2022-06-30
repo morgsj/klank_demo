@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { logInWithEmailAndPassword, signInWithGoogle } from "../api/auth-api";
+import { logInWithEmailAndPassword, mapUserErrorCode, signInWithGoogle } from "../api/auth-api";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
 import { Button, Form } from "react-bootstrap";
@@ -10,6 +10,9 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, loading, error] = useAuthState(auth);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const navigate = useNavigate();
     useEffect(() => {
         if (loading) {
@@ -18,6 +21,11 @@ function Login() {
         }
         if (user) navigate("/dashboard");
     }, [user, loading]);
+
+    const handleLoginButtonPressed = () => {
+        logInWithEmailAndPassword(email, password).catch(err => {setErrorMessage(mapUserErrorCode(err.code)); console.log(err.code)});
+    }
+
     return (
         <div className="login">
             <div className="login-container">
@@ -37,8 +45,10 @@ function Login() {
                         <Form.Control type="password" className="login-textBox" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
                     </Form.Group>
 
+                    <p id="error-message">{errorMessage}</p>
+
                     <Form.Group>
-                        <Button variant="primary" className="login-btn" onClick={() => logInWithEmailAndPassword(email, password)}>Login</Button>
+                        <Button variant="primary" className="login-btn" onClick={handleLoginButtonPressed}>Login</Button>
                     </Form.Group>
 
                     <Form.Group>

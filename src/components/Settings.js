@@ -10,8 +10,7 @@ import "./Settings.css";
 import { Button, Form } from "react-bootstrap";
 
 import { useFilePicker } from 'use-file-picker';
-import { deleteUserPhoto, getImage, removeProfilePhoto, uploadProfilePhoto } from "../api/profile-api";
-import { getUserDetails } from "../api/user-api";
+import { getUserDetails, deleteUserPhoto, getImage, removeProfilePhoto, uploadProfilePhoto  } from "../api/user-api";
 
 export default function Settings() {
     const [user, loading, error] = useAuthState(auth);
