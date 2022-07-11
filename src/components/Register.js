@@ -33,7 +33,7 @@ function Register() {
 
     useEffect(() => {
         if (loading) return;
-        if (user) history("/dashboard");
+        if (user) history("/complete-registration");
     }, [user, loading]);
     return (
         <div className="register">

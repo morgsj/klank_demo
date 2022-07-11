@@ -70,12 +70,12 @@ export default function Profile() {
     }
 
     return (
-        <div className="container m-0 p-0">
-            <div className="row">
-                <div className="col-sm-1">
+        <Container className="global-container">
+            <Row>
+                <Col md="auto" style={{padding: 0}}>
                     <Navigator uid={user ? user.uid : ""} />
-                </div>
-                <div className="col-sm-11">
+                </Col>
+                <Col style={{padding: 0}}>
                     <Header title={"Profile"} />
 
                     <Container fluid>
@@ -134,9 +134,9 @@ export default function Profile() {
                         </Row>
                     </Container>
 
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

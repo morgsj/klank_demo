@@ -4,7 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { Send } from "react-bootstrap-icons";
-import { Button, Container, Navbar, Row, Modal } from "react-bootstrap";
+import { Button, Container, Navbar, Row, Modal, Col } from "react-bootstrap";
 
 import Navigator from "./Navigator";
 import Header from "./Header";
@@ -118,12 +118,12 @@ export default function Messages() {
     };
 
     return (<>
-        <Container className="m-0 p-0">
+        <Container className="global-container">
             <Row>
-                <div className="col-sm-1">
+                <Col md="auto" style={{padding: 0}}>
                     <Navigator uid={user ? user.uid : ""} />
-                </div>
-                <div className="col-sm-11">
+                </Col>
+                <Col style={{padding: 0}}>
                     <Header title={"Messages"}/>
                     <div id="messages-container">
                         <Container id="inner-grid-container">
@@ -185,7 +185,7 @@ export default function Messages() {
                         </Container>
 
                     </div>
-                </div>
+                </Col>
             </Row>
         </Container>
         

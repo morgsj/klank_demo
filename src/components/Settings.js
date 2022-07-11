@@ -7,10 +7,11 @@ import { auth } from "../firebase";
 import Navigator from "./Navigator";
 import Header from "./Header";
 import "./Settings.css";
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 import { useFilePicker } from 'use-file-picker';
 import { getUserDetails, deleteUserPhoto, getImage, removeProfilePhoto, uploadProfilePhoto  } from "../api/user-api";
+import { ArrowRight } from "react-bootstrap-icons";
 
 export default function Settings() {
     const [user, loading, error] = useAuthState(auth);
@@ -63,45 +64,149 @@ export default function Settings() {
     };
 
     return (
-        <div className="container m-0 p-0">
-            <div className="row">
-                <div className="col-sm-1">
+        <Container className="global-container">
+            <Row>
+                <Col md="auto" style={{padding: 0}}>
                     <Navigator uid={user ? user.uid : ""} />
-                </div>
-                <div className="col-sm-11">
+                </Col>
+                <Col style={{padding: 0}}>
+
                     <Header title={"Settings"}/>
-                    
-                    <div>
-                        <button className="btn btn-primary" disabled={hasMadeChanges}>Save</button>
-                    </div>
 
-                    <Form>
+                    <Form id="form">
 
-                        <Form.Group>
-                            <div id="avatar-container">
-                                <img src={profilePhotoURL} className="rounded-circle" id="avatar" alt="Avatar" />
-                            </div>
-                            <Button variant="secondary" onClick={handleChangePhoto}>Change Photo</Button>
-                            
-                            <Button variant="secondary" onClick={handleRemovePhoto} disabled={!profilePhotoURL}>Remove Photo</Button>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="text" value={nameInput} onChange={handleNameInputChange} placeholder="Name" />
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Date of Birth</Form.Label>
-                            <Form.Control type="date"/>
-                        </Form.Group>
+                        <Container>
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    <p>Profile Photo</p>
+                                </Col>
+                                <Col sm={8} id="profile-photo">
+                                    <Row>
+                                    <div id="avatar-container">
+                                        <img src={profilePhotoURL} className="rounded-circle" id="avatar" alt="Avatar" />
+                                    </div>
+                                    </Row>
+                                    <Row className="settings-button-container">
+                                        <Button className="settings-button" variant="secondary" onClick={handleChangePhoto}>Change Photo</Button>
+                                    </Row>
+                                    <Row className="settings-button-container">
+                                        <Button className="settings-button" variant="secondary" onClick={handleRemovePhoto} disabled={!profilePhotoURL}>Remove Photo</Button>
+                                    </Row>                                    
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    <p>Name</p>
+                                </Col>
+                                <Col sm={8}>
+                                    <Form.Control type="text" value={nameInput} onChange={handleNameInputChange} placeholder="Name" />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    <p>Date of Birth</p>
+                                </Col>
+                                <Col sm={8}>
+                                    <Form.Control type="date"/>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    <p>Push Notifications</p>
+                                </Col>
+                                <Col sm={8}>
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="Email"
+                                    />
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="SMS"
+                                    />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    <p>Notification Types</p>
+                                </Col>
+                                <Col sm={8}>
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="Offers"
+                                    />
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="News"
+                                    />
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="Unread Messages"
+                                    />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    Dark Mode
+                                </Col>
+                                <Col sm={8}>
+                                    <Form.Check 
+                                        type="switch"
+                                        id="custom-switch"
+                                    />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    Privacy
+                                </Col>
+                                <Col sm={8}>
+                                    <a className="link">Privacy Policy <ArrowRight /></a>
+                                    <a className="link">Cookie Policy <ArrowRight /></a>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    Legal
+                                </Col>
+                                <Col sm={8}>
+                                    <a className="link">Terms and Conditions <ArrowRight /></a>
+                                    <a className="link">Licenses <ArrowRight /></a>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row className="settings-section">
+                                <Col sm={4}>
+                                    Other
+                                </Col>
+                                <Col sm={8}>
+                                    <Row className="settings-button-container">
+                                        <Button className="settings-button" variant="danger">Logout</Button>
+                                    </Row>
+                                    <Row className="settings-button-container">
+                                        <Button className="settings-button" variant="danger">Delete Account</Button>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Container>
 
 
                     </Form>
 
                     <Button onClick={() => navigate("/venue/new-venue")}>Add Venue</Button>
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+        </Container>
     );
 }

@@ -15,6 +15,7 @@ import { useFilePicker } from "use-file-picker";
 export default function Venue() {
 
     const { venueID } = useParams(); 
+
     const [user, loading, error] = useAuthState(auth);
     const [userDetails, setUserDetails] = useState(null);
 
@@ -49,13 +50,13 @@ export default function Venue() {
     }
 
     return (
-        <Container className="m-0 p-0">
+        <Container className="global-container">
             <Row>
-                <div className="col-sm-1">
+                <Col md="auto" style={{padding: 0}}>
                     <Navigator uid={user ? user.uid : ""} />
-                </div>
+                </Col>
 
-                <div className="col-sm-11">
+                <Col style={{padding: 0}}>
                     <Header title={`Venue - ${newVenue ? "New Venue" : venueID}`}/>
 
                     {venue && venue.organiser.uid == user.uid && (
@@ -66,7 +67,7 @@ export default function Venue() {
                     
                     {!newVenue && venue && !isEditing && <VenueInfo user={userDetails} venue={venue} navigate={navigate} />}
                     {!newVenue && venue && isEditing && <VenueCreator user={userDetails} createVenue={createVenue} venue={venue} />}
-                </div>
+                </Col>
             </Row>
         </Container>
     );

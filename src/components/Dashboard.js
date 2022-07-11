@@ -9,36 +9,28 @@ import Navigator from "./Navigator";
 import "./Dashboard.css";
 import { Search, MusicNoteList, ChatSquareDots, PersonCheck } from "react-bootstrap-icons";
 
+import { updateProfile } from "firebase/auth";
+import { getUserDetails } from "../api/user-api";
+import { Col, Container, Row } from "react-bootstrap";
+
 export default function Dashboard() {
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");
     const navigate = useNavigate();
-    
-    const fetchUserName = async () => {
-        try {
-            const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-            const doc = await getDocs(q);
-            const data = doc.docs[0].data();
-            setName(data.name);
-        } catch (err) {
-            console.error(err);
-            alert("An error occured while fetching user data");
-        }
-    };
 
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/login");
-        fetchUserName();
+        else getUserDetails(user.uid).then(ud => setName(ud.name));
     }, [user, loading]);
 
     return (
-        <div className="container m-0 p-0">
-            <div className="row">
-                <div className="col-sm-1">
+        <Container className="global-container">
+            <Row>
+                <Col md="auto" style={{padding: 0}}>
                     <Navigator uid={user ? user.uid : ""} />
-                </div>
-                <div className="col-sm-11">
+                </Col>
+                <Col style={{padding: 0}}>
                     <Header title={"Dashboard "}/>
                     
                     <h1 style={{margin: '3vw', fontSize: 50}}><i><b>Welcome back {name.split(" ")[0]}</b></i></h1>
@@ -62,9 +54,9 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

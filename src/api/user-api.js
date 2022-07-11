@@ -19,7 +19,10 @@ import { deleteObject, getDownloadURL, ref as storageRef, getStorage, uploadByte
 const storage = getStorage();
 
 const getUserDetails = async (uid) => {
+    if (!uid || uid == "") throw new TypeError("uid cannot be undefined");
+
     try {
+
         let udStore = localStorage.getItem("userDetails");
         if (udStore) {
             let userDetails = JSON.parse(udStore);

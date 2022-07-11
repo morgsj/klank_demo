@@ -1,18 +1,57 @@
-import React from "react";
-import { House, Binoculars, ChatSquare, Person, CalendarWeek, Gear } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
-import './Navigator.css';
+import React, { useEffect } from 'react';
+import {
+    CDBSidebar,
+    CDBSidebarContent,
+    CDBSidebarHeader,
+    CDBSidebarMenu,
+    CDBSidebarMenuItem,
+} from 'cdbreact';
+import { NavLink, useNavigate } from 'react-router-dom';
 
-export default function Navigator(props) {
-    return (
-        <nav id="main-nav" className="nav flex-column">
-            <Link to="/"><img id="logo" src={require("../images/logo_transparent.png")} style={{height: '5vw', minHeight: 65}}/></Link>
-            <Link to="/dashboard"><House className="nav-icon" /></Link>
-            <Link to="/search"><Binoculars className="nav-icon" /></Link>
-            <Link to="/messages"><ChatSquare className="nav-icon" /></Link>
-            <Link to="/calendar"><CalendarWeek className="nav-icon" /></Link>
-            <Link to={`/profile/${props.uid}`}><Person className="nav-icon" /></Link>
-            <Link to="/settings"><Gear className="nav-icon" /></Link>
-        </nav>
-    );
-}
+import './Navigator.css';
+import { List } from 'react-bootstrap-icons';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
+
+const Navigator = () => {
+
+    const [user, loading, error] = useAuthState(auth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (loading) return;
+        if (!user) return navigate("/login");
+    }, [user, loading]);
+
+    return (<>
+        <div id="sidebar-container">
+            <CDBSidebar id="sidebar">
+                <CDBSidebarHeader prefix={<List id="list-icon" />}>
+                    <a href="/" className="text-decoration-none" style={{ color: 'inherit' }}>
+                        <img id="logo" src={require("../images/logo_transparent.png")} />
+                    </a>
+                </CDBSidebarHeader>
+
+                <CDBSidebarContent className="sidebar-content">
+                <CDBSidebarMenu>
+                    <NavLink exact to="/dashboard" activeClassName="activeClicked">
+                        <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
+                    </NavLink>
+                    <NavLink exact to="/messages" activeClassName="activeClicked">
+                        <CDBSidebarMenuItem icon="dice">Messages</CDBSidebarMenuItem>
+                    </NavLink>
+                    <NavLink exact to={user ? `/profile/${user.uid}` : "/"} activeClassName="activeClicked">
+                        <CDBSidebarMenuItem icon="user">Profile page</CDBSidebarMenuItem>
+                    </NavLink>
+                    <NavLink exact to="/settings" activeClassName="activeClicked">
+                        <CDBSidebarMenuItem icon="video">Settings</CDBSidebarMenuItem>
+                    </NavLink>
+                </CDBSidebarMenu>
+                </CDBSidebarContent>
+
+            </CDBSidebar>
+        </div>
+    </>);
+};
+
+export default Navigator;

@@ -20,6 +20,7 @@ import Venue from "./components/Venue";
 import Settings from "./components/Settings";
 
 import "./theme.css";
+import Onboarding from "./components/Onboarding";
 
 export default function App() {
   
@@ -37,7 +38,7 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="booking/:bookingID" element={<Booking />} />
           <Route path="venue/:venueID" element={<Venue />} />
-
+          <Route path="complete-registration" element={<Onboarding />} />
 
       </Routes>
     </BrowserRouter>
