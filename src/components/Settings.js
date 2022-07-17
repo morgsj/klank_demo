@@ -7,22 +7,38 @@ import { auth } from "../firebase";
 import Navigator from "./Navigator";
 import Header from "./Header";
 import "./Settings.css";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 
 import { useFilePicker } from 'use-file-picker';
 import { getUserDetails, deleteUserPhoto, getImage, removeProfilePhoto, uploadProfilePhoto  } from "../api/user-api";
 import { ArrowRight } from "react-bootstrap-icons";
+import { updateUserDetails } from "../api/auth-api";
+import { dateStringToTimestamp, toDateTime } from "../api/helpers";
+import { Timestamp } from "firebase/firestore";
+import { loadTheme } from "..";
 
 export default function Settings() {
     const [user, loading, error] = useAuthState(auth);
     const [userDetails, setUserDetails] = useState(null);
 
-    const [nameInput, setNameInput] = useState("");
-
     const [profilePhotoURL, setProfilePhotoURL] = useState("");
     const [profilePhotoFilename, setProfilePhotoFilename] = useState("");
 
-    const [hasMadeChanges, setHasMadeChanges] = useState({});
+    const [nameInput, setNameInput] = useState("");
+    const [isEditingName, setIsEditingName] = useState(false);
+
+    const [dateOfBirthInput, setDateOfBirthInput] = useState("");
+    const [isEditingDob, setIsEditingDob] = useState(false);
+
+    const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(false);
+    const [smsNotificationsEnabled, setSMSNotificationsEnabled] = useState(false);
+
+    const [offersNotificationsEnabled, setOffersNotificationsEnabled] = useState(false);
+    const [newsNotificationsEnabled, setNewsNotificationsEnabled] = useState(false);
+    const [unreadMessagesNotificationsEnabled, setUnreadMessagesNotificationsEnabled] = useState(false);
+
+    const [darkMode, setDarkMode] = useState(false);
+
 
     const [openFileSelector, { plainFiles, fileSelectorLoading }] = useFilePicker({
         accept: ['.png', '.jpg', '.PNG', '.JPG'],
@@ -36,9 +52,22 @@ export default function Settings() {
         if (loading || fileSelectorLoading) return;
         if (!user) return navigate("/login");
         setProfilePhotoURL(user.photoURL);
+
         getUserDetails(user.uid).then(data => {
             setUserDetails(data);
             setProfilePhotoFilename(data.photo);
+            setNameInput(data.name);
+
+            setDateOfBirthInput(toDateTime(data.dateOfBirth.seconds));
+
+            setEmailNotificationsEnabled(data.notifications.email);
+            setSMSNotificationsEnabled(data.notifications.sms);
+
+            setOffersNotificationsEnabled(data.notificationTypes.offers);
+            setNewsNotificationsEnabled(data.notificationTypes.news);
+            setUnreadMessagesNotificationsEnabled(data.notificationTypes.unreadMessages);
+
+            setDarkMode(data.darkMode);
         });
     }, [user, loading, fileSelectorLoading]);
 
@@ -50,11 +79,9 @@ export default function Settings() {
         }
     }, [plainFiles]);
 
-    const handleNameInputChange = e => {
-        setHasMadeChanges(e.target.value == user.displayName);
-        setNameInput(e.target.value);
-        // canSave();
-    }
+    const handleNameInputChange = e => setNameInput(e.target.value);
+
+    const handleDobInputChange = e => setDateOfBirthInput(e.target.value);
 
     const handleChangePhoto = () => openFileSelector();
     const handleRemovePhoto = () => {
@@ -62,6 +89,70 @@ export default function Settings() {
         setProfilePhotoFilename("");
         setProfilePhotoURL("");
     };
+
+    const handleEditingName = () => {
+
+        if (isEditingName) {
+            updateUserDetails(user.uid, {name: nameInput})
+                .then(() => console.log("Updated"))
+                .catch(() => console.log("Failed to update"));
+        }
+        
+        setIsEditingName(!isEditingName);
+    }
+
+    const handleEditingDob = () => {
+
+        if (isEditingDob) {
+            updateUserDetails(user.uid, {dateOfBirth: dateStringToTimestamp(dateOfBirthInput)})
+                .then(() => console.log("Updated"))
+                .catch(() => console.log("Failed to update"));
+        }
+
+        setIsEditingDob(!isEditingDob);
+    }
+
+    const handleEmailNotificationClick = (e) => {
+        setEmailNotificationsEnabled(e.target.checked);
+        updateUserDetails(user.uid, {notifications: {email: e.target.checked, sms: userDetails.notifications.sms}})
+            .then(() => console.log("Updated"))
+            .catch(() => console.log("Failed to update"));
+    }
+
+    const handleSMSNotificationClick = (e) => {
+        setSMSNotificationsEnabled(e.target.checked);
+        updateUserDetails(user.uid, {notifications: {email: userDetails.notifications.sms, sms: e.target.checked}})
+            .then(() => console.log("Updated"))
+            .catch(() => console.log("Failed to update"));
+    }
+
+    const handleOffersNotificationsClick = (e) => {
+        setOffersNotificationsEnabled(e.target.checked);
+        updateUserDetails(user.uid, {notificationTypes: {news: e.target.checked, offers: userDetails.notificationTypes.offers, unreadMessages: userDetails.notificationTypes.unreadMessages}})
+        .then(() => console.log("Updated"))
+        .catch(() => console.log("Failed to update"));
+    }
+
+    const handleNewsNotificationsClick = (e) => {
+        setNewsNotificationsEnabled(e.target.checked);
+        updateUserDetails(user.uid, {notificationTypes: {news: userDetails.notificationTypes.news, offers: e.target.checked, unreadMessages: userDetails.notificationTypes.unreadMessages}})
+        .then(() => console.log("Updated"))
+        .catch(() => console.log("Failed to update"));
+    }
+
+    const handleUnreadMessagesNotificationsClick = (e) => {
+        setUnreadMessagesNotificationsEnabled(e.target.checked);
+        updateUserDetails(user.uid, {notificationTypes: {news: userDetails.notificationTypes.news, offers: userDetails.notificationTypes.offers, unreadMessages: e.target.checked}})
+            .then(() => console.log("Updated"))
+            .catch(() => console.log("Failed to update"));
+    }
+
+    const handleDarkModeClick = (e) => {
+        setDarkMode(e.target.checked);
+        updateUserDetails(user.uid, {darkMode: e.target.checked})
+            .then(() => loadTheme(e.target.checked ? "dark" : "light"))
+            .catch(() => console.log("Failed to update"));
+    }
 
     return (
         <Container className="global-container">
@@ -100,7 +191,10 @@ export default function Settings() {
                                     <p>Name</p>
                                 </Col>
                                 <Col sm={8}>
-                                    <Form.Control type="text" value={nameInput} onChange={handleNameInputChange} placeholder="Name" />
+                                    <InputGroup>
+                                        <Form.Control type="text" disabled={!isEditingName} value={nameInput} onChange={handleNameInputChange} placeholder="Name" />
+                                        <Button onClick={handleEditingName}>{isEditingName ? "Save" : "Edit"}</Button>
+                                    </InputGroup>
                                 </Col>
                             </Row>
                             <hr />
@@ -109,7 +203,10 @@ export default function Settings() {
                                     <p>Date of Birth</p>
                                 </Col>
                                 <Col sm={8}>
-                                    <Form.Control type="date"/>
+                                    <InputGroup>
+                                        <Form.Control type="date" value={dateOfBirthInput} onChange={handleDobInputChange} disabled={!isEditingDob} />
+                                        <Button onClick={handleEditingDob}>{isEditingDob ? "Save" : "Edit"}</Button>
+                                    </InputGroup>
                                 </Col>
                             </Row>
                             <hr />
@@ -122,11 +219,15 @@ export default function Settings() {
                                         type="switch"
                                         id="custom-switch"
                                         label="Email"
+                                        checked={emailNotificationsEnabled}
+                                        onChange={handleEmailNotificationClick}
                                     />
                                     <Form.Check 
                                         type="switch"
                                         id="custom-switch"
                                         label="SMS"
+                                        checked={smsNotificationsEnabled}
+                                        onChange={handleSMSNotificationClick}
                                     />
                                 </Col>
                             </Row>
@@ -140,16 +241,22 @@ export default function Settings() {
                                         type="switch"
                                         id="custom-switch"
                                         label="Offers"
+                                        checked={offersNotificationsEnabled}
+                                        onChange={handleOffersNotificationsClick}
                                     />
                                     <Form.Check 
                                         type="switch"
                                         id="custom-switch"
                                         label="News"
+                                        checked={newsNotificationsEnabled}
+                                        onChange={handleNewsNotificationsClick}
                                     />
                                     <Form.Check 
                                         type="switch"
                                         id="custom-switch"
                                         label="Unread Messages"
+                                        checked={unreadMessagesNotificationsEnabled}
+                                        onChange={handleUnreadMessagesNotificationsClick}
                                     />
                                 </Col>
                             </Row>
@@ -162,6 +269,8 @@ export default function Settings() {
                                     <Form.Check 
                                         type="switch"
                                         id="custom-switch"
+                                        checked={darkMode}
+                                        onChange={handleDarkModeClick}
                                     />
                                 </Col>
                             </Row>

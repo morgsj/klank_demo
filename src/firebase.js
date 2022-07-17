@@ -7,6 +7,7 @@ import {
     getFirestore,
     collection,
 } from "firebase/firestore";
+import { getMessaging, onMessage } from "firebase/messaging";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -19,17 +20,26 @@ const firebaseConfig = {
     storageBucket: 'gs://klank-a0771.appspot.com'
 };
 
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+const messaging = getMessaging(app);
 
 const usersRef = collection(db, "users");
 const bookingsRef = collection(db, "bookings");
 const venuesRef = collection(db, "venues");
 const messagesRef = collection(db, "messages");
 
+onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    // ...
+});
+
 export {
     auth,
     db,
-    usersRef, bookingsRef, venuesRef, messagesRef
+    usersRef, bookingsRef, venuesRef, messagesRef,
+    messaging
 };

@@ -18,9 +18,12 @@ import BookingOutline from "./components/BookingOutline";
 import Booking from "./components/Booking";
 import Venue from "./components/Venue";
 import Settings from "./components/Settings";
+import Onboarding from "./components/Onboarding";
+import EnableNotifications from "./components/EnableNotifications";
 
 import "./theme.css";
-import Onboarding from "./components/Onboarding";
+
+import './messaging_get_token';
 
 export default function App() {
   
@@ -39,6 +42,8 @@ export default function App() {
           <Route path="booking/:bookingID" element={<Booking />} />
           <Route path="venue/:venueID" element={<Venue />} />
           <Route path="complete-registration" element={<Onboarding />} />
+          <Route path="enable-notifications" element={<EnableNotifications />} />
+          
 
       </Routes>
     </BrowserRouter>

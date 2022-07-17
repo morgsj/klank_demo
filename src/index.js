@@ -17,6 +17,14 @@ window.addEventListener('DOMContentLoaded', () => {
     loadTheme(getCurrentTheme());
 })
 
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+    .register("/firebase-messaging-sw.js")
+    .then((registration) => console.log("Registration successful, scope is:", registration.scope))
+    .catch((err) => console.log("Service worker registration failed, error:", err));
+} else {
+    console.error("Did not fine serviceWorker in navigator");
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
@@ -25,3 +33,5 @@ root.render(<App />);
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+export { loadTheme };

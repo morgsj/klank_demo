@@ -18,7 +18,7 @@ export default function Onboarding() {
         if (!user) return navigate("/register");
         else {
             getUserDetails(user.uid).then((userDetails) => {
-                if (userDetails.hasOnboarded) navigate("/dashboard");
+                if (userDetails.hasOnboarded) navigate("/enable-notifications");
             })
         }
     }, [user, loading]);

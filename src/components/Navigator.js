@@ -34,16 +34,16 @@ const Navigator = () => {
 
                 <CDBSidebarContent className="sidebar-content">
                 <CDBSidebarMenu>
-                    <NavLink exact to="/dashboard" activeClassName="activeClicked">
+                    <NavLink to="/dashboard">
                         <CDBSidebarMenuItem icon="columns">Dashboard</CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to="/messages" activeClassName="activeClicked">
+                    <NavLink to="/messages">
                         <CDBSidebarMenuItem icon="dice">Messages</CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to={user ? `/profile/${user.uid}` : "/"} activeClassName="activeClicked">
+                    <NavLink to={user ? `/profile/${user.uid}` : "/"}>
                         <CDBSidebarMenuItem icon="user">Profile page</CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to="/settings" activeClassName="activeClicked">
+                    <NavLink to="/settings">
                         <CDBSidebarMenuItem icon="video">Settings</CDBSidebarMenuItem>
                     </NavLink>
                 </CDBSidebarMenu>
