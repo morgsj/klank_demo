@@ -23,7 +23,7 @@ const getUserDetails = async (uid) => {
 
     try {
 
-        let udStore = localStorage.getItem("userDetails");
+        let udStore = sessionStorage.getItem("userDetails");
         if (udStore) {
             let userDetails = JSON.parse(udStore);
             if (userDetails && userDetails.uid == uid) return userDetails;
@@ -38,7 +38,7 @@ const getUserDetails = async (uid) => {
             if (userDetails.type.includes("host")) {
                 await populateVenueDetails(userDetails.venues).then(venues => userDetails.venues = venues);
             }
-            localStorage.setItem("userDetails", JSON.stringify(userDetails))
+            sessionStorage.setItem("userDetails", JSON.stringify(userDetails))
             return results.docs[0].data();
         } else {
             throw new Error(`Shouldn't have found ${results.docs.length} with id "${uid}".`);
@@ -95,9 +95,9 @@ const deleteUserPhoto = async (uid, filename) => {
 const removeProfilePhoto = async (uid, filename) => {
     deleteUserPhoto(uid, filename);
 
-    let userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    let userDetails = JSON.parse(sessionStorage.getItem("userDetails"));
     userDetails.photo = "";
-    localStorage.setItem("userDetails", JSON.stringify(userDetails));
+    sessionStorage.setItem("userDetails", JSON.stringify(userDetails));
 
     const userRef = doc(db, `/users/${uid}`);
     updateDoc(userRef, { photo: "" }).catch(error => console.log(error));

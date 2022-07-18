@@ -5,7 +5,7 @@ import './colours.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals'; 
 
-const getCurrentTheme = () => 'dark'; //window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getCurrentTheme = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 function loadTheme(theme){
     const root = document.querySelector(':root');
@@ -13,8 +13,13 @@ function loadTheme(theme){
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    console.log(getCurrentTheme());
-    loadTheme(getCurrentTheme());
+    let colorTheme = localStorage.getItem('colorTheme');
+    if (colorTheme == null) {
+        colorTheme = getCurrentTheme();
+        localStorage.setItem('colorTheme', colorTheme);
+    }
+
+    loadTheme(colorTheme);
 })
 
 if ("serviceWorker" in navigator) {

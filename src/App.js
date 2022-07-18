@@ -26,7 +26,7 @@ import "./theme.css";
 import './messaging_get_token';
 
 export default function App() {
-  
+
   return (
     <BrowserRouter>
         <Routes>

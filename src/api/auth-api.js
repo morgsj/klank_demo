@@ -108,11 +108,11 @@ const updateUserDetails = async (uid, details) => {
         await updateDoc(dc, details);
 
         // edit cache
-        let userDetails = JSON.parse(localStorage.getItem("userDetails"));
+        let userDetails = JSON.parse(sessionStorage.getItem("userDetails"));
         for (const detail in details) {
             userDetails[detail] = details[detail];
         }
-        localStorage.setItem("userDetails", JSON.stringify(userDetails));
+        sessionStorage.setItem("userDetails", JSON.stringify(userDetails));
 
 
         if (Object.keys(details).includes("name")) {
@@ -125,7 +125,7 @@ const updateUserDetails = async (uid, details) => {
 }
 
 const logout = () => {
-    localStorage.removeItem("userDetails");
+    sessionStorage.removeItem("userDetails");
     signOut(auth);
 };
 

@@ -67,9 +67,13 @@ export default function Settings() {
             setNewsNotificationsEnabled(data.notificationTypes.news);
             setUnreadMessagesNotificationsEnabled(data.notificationTypes.unreadMessages);
 
-            setDarkMode(data.darkMode);
         });
     }, [user, loading, fileSelectorLoading]);
+
+    useEffect(() => {
+        const colorTheme = localStorage.getItem("colorTheme");
+        setDarkMode(colorTheme == "dark");
+    }, [])
 
     useEffect(() => {
         if (plainFiles.length) {
@@ -149,9 +153,9 @@ export default function Settings() {
 
     const handleDarkModeClick = (e) => {
         setDarkMode(e.target.checked);
-        updateUserDetails(user.uid, {darkMode: e.target.checked})
-            .then(() => loadTheme(e.target.checked ? "dark" : "light"))
-            .catch(() => console.log("Failed to update"));
+        let newTheme = e.target.checked ? "dark" : "light";
+        loadTheme(newTheme);
+        localStorage.setItem("colorTheme", newTheme);
     }
 
     return (
