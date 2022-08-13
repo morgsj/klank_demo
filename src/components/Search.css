@@ -1,8 +1,0 @@
-#search-bar {
-    margin: 1vw;
-    padding: 1vw;
-    width: calc(100% - 2vw);
-    border: none;
-    border-bottom: 1px solid gray;
-    font-size: large;
-}

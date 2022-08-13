@@ -4,22 +4,20 @@ import {
   Route,
   Routes
 } from "react-router-dom";
-import Navigator from "./components/Navigator";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Dashboard from "./components/Dashboard";
-import Messages from "./components/Messages";
-import Search from "./components/Search";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Reset from "./components/Reset";
-import Calendar from "./components/Calendar";
-import Profile from "./components/Profile";
-import BookingOutline from "./components/BookingOutline";
-import Booking from "./components/Booking";
-import Venue from "./components/Venue";
-import Settings from "./components/Settings";
-import Onboarding from "./components/Onboarding";
-import EnableNotifications from "./components/EnableNotifications";
+import Dashboard from "./domains/dashboard";
+import Messages from "./domains/messages";
+import Search from "./domains/search";
+import Login from "./domains/auth/login";
+import Register from "./domains/auth/register";
+import Index from "./domains/auth/reset-password";
+import Calendar from "./domains/calendar";
+import Profile from "./domains/profile";
+import Booking from "./domains/booking";
+import Venue from "./domains/venue";
+import Settings from "./domains/settings";
+import Onboarding from "./domains/auth/additional-onboarding";
+import EnableNotifications from "./domains/auth/notification-onboarding/EnableNotifications";
 
 import "./theme.css";
 
@@ -35,7 +33,7 @@ export default function App() {
           <Route path="register" element={<Register />} />
           <Route path="messages" element={<Messages />} />
           <Route path="search" element={<Search />} />
-          <Route path="reset" element={<Reset />} />
+          <Route path="reset" element={<Index />} />
           <Route path="profile/:id" element={<Profile />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />

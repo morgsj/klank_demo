@@ -28,7 +28,7 @@ if ("serviceWorker" in navigator) {
     .then((registration) => console.log("Registration successful, scope is:", registration.scope))
     .catch((err) => console.log("Service worker registration failed, error:", err));
 } else {
-    console.error("Did not fine serviceWorker in navigator");
+    console.error("Did not find serviceWorker in navigator");
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
