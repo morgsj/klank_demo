@@ -5,7 +5,7 @@ import { Timestamp } from "firebase/firestore";
  * @param {*} secs 
  * @returns 
  */
-function toDateTime(secs) {
+function toDateTime(secs: number) {
     let t = new Date(1970, 0, 1);
     t.setSeconds(secs);
     let year=t.getFullYear();
@@ -14,11 +14,11 @@ function toDateTime(secs) {
     return year+"-"+less10(month)+"-"+less10(day);
 }
 
-function less10(time){
-    return time<10 ? "0"+time :time;
+function less10(time: number){
+    return time < 10 ? "0"+time :time;
 }
 
-function dateStringToTimestamp(str) {
+function dateStringToTimestamp(str: string) {
     const date = new Date(str);
     const seconds = date.getTime() / 1000;
     return new Timestamp(seconds, 0);

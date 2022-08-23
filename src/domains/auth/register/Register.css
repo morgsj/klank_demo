@@ -1,0 +1,81 @@
+.register {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: var(--bkg2);
+    padding: 30px;
+
+    border: 3px solid var(--accent1);
+    border-radius: 10px;
+}
+
+.register-textBox {
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.register-btn {
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border: none;
+    color: white;
+    background-color: black;
+}
+
+.register-google {
+    border: 2px solid var(--accent1) !important;
+    background-color: white !important;
+    color: black !important;
+}
+
+.register div {
+    margin-top: 7px;
+}
+
+#user-type-selector {
+    margin: 3vh 3vw 3vh 3vw;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: var(--bkg2);
+    padding: 30px;
+
+    border: 3px solid var(--accent1);
+    border-radius: 10px;
+}
+
+#google-logo {
+    width: auto;
+    height: auto;
+    max-width: 2.5vw;
+    margin-right: 0.5vw;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#skip {
+    text-decoration: none;
+    color: var(--accent3);
+}

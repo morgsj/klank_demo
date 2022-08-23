@@ -1,0 +1,36 @@
+.nav-icon {
+    color: var(--accent3);
+    height: 6vw;
+    min-height: 75;
+    font-size: 2vw;
+}
+
+#logo {
+    height: 10vh;
+    margin: 0;
+    padding: 0;
+}
+
+#sidebar-container {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    max-width: 100%;
+}
+
+a {
+    display: flex;
+    justify-content: left;
+    align-content: left;
+}
+
+#list-icon {
+    height: min(5vh, 5vw);
+    width: min(5vh, 5vw);
+}
+
+#sidebar {
+    max-width: 100%;
+    background-color: var(--bkg2);
+    border-right: 1px solid var(--accent3);
+}

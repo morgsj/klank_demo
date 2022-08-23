@@ -1,40 +1,20 @@
-import {
-    auth,
-    db,
-    usersRef
-} from "../firebase";
+import { auth, db, usersRef } from "../firebase";
 
 import {
-    GoogleAuthProvider,
-    getAuth,
-    signInWithPopup,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    sendPasswordResetEmail,
-    signOut,
-    updateProfile,
+    GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+    sendPasswordResetEmail, signOut, updateProfile,
 } from "firebase/auth";
 
-import {
-    getDocs,
-    collection,
-    where,
-    addDoc,
-    query,
-    doc,
-    setDoc,
-    updateDoc,
-} from "firebase/firestore";
-import { useDeferredValue, useImperativeHandle } from "react";
+import { getDocs, where, query, doc, setDoc, updateDoc } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
-const signInWithGoogle = async (type) => {
+const signInWithGoogle = async (type: string[]) => {
     try {
         const res = await signInWithPopup(auth, googleProvider);
         const user = res.user;
         const q = query(usersRef, where("uid", "==", user.uid));
         const docs = await getDocs(q);
-        
+
         if (docs.docs.length === 0) {
             const dc = doc(db, "/users/", user.uid);
             await setDoc(dc, {
@@ -47,21 +27,21 @@ const signInWithGoogle = async (type) => {
                 reviews: []
             });
         }
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
+    } catch (e: any) {
+        console.error(e);
+        alert(e.message);
     }
 };
 
-const logInWithEmailAndPassword = async (email, password) => {
+const logInWithEmailAndPassword = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
 };
 
-const registerWithEmailAndPassword = async (name, email, password, type, phone) => {
+const registerWithEmailAndPassword = async (name: string, email: string, password: string, type: string[], phone: string) => {
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
-        
+
         const dc = doc(db, "/users/", user.uid);
         await setDoc(dc, {
             uid: user.uid,
@@ -75,40 +55,40 @@ const registerWithEmailAndPassword = async (name, email, password, type, phone) 
             hasOnboarded: false
         });
 
-    } catch (err) {
+    } catch (err: any) {
         console.error(err);
         alert(err.message);
     }
 };
 
-const sendPasswordReset = async (email) => {
+const sendPasswordReset = async (email: string) => {
     try {
         await sendPasswordResetEmail(auth, email);
         alert("Password reset link sent!");
-    } catch (err) {
+    } catch (err: any) {
         console.error(err);
         alert(err.message);
     }
 };
 
-const submitOnboardingInfo = async (country, uid) => {
+const submitOnboardingInfo = async (country: string, uid: string) => {
     try {
         const dc = doc(db, "/users/", uid);
         await updateDoc(dc, { country, hasOnboarded: true });
-    } catch (err) {
+    } catch (err: any) {
         console.error(err);
         alert(err.message);
     }
 }
 
-const updateUserDetails = async (uid, details) => {
+const updateUserDetails = async (uid: string, details: any) => {
     try {
         const dc = doc(db, "/users/", uid);
 
         await updateDoc(dc, details);
 
         // edit cache
-        let userDetails = JSON.parse(sessionStorage.getItem("userDetails"));
+        let userDetails = JSON.parse(sessionStorage.getItem("userDetails") ?? "");
         for (const detail in details) {
             userDetails[detail] = details[detail];
         }
@@ -116,9 +96,9 @@ const updateUserDetails = async (uid, details) => {
 
 
         if (Object.keys(details).includes("name")) {
-            await updateProfile(auth.currentUser, {displayName: details.name});
+            await updateProfile(auth.currentUser!, {displayName: details.name});
         }
-    } catch (err) {
+    } catch (err: any) {
         console.error(err);
         alert(err.message);
     }
@@ -129,7 +109,7 @@ const logout = () => {
     signOut(auth);
 };
 
-const mapUserErrorCode = (code) => {
+const mapUserErrorCode = (code: string) => {
     switch (code) {
         case "auth/email-already-exists":
             return "An email with that account already exists";

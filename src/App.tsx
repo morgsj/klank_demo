@@ -13,14 +13,13 @@ import Register from "./domains/auth/register";
 import Index from "./domains/auth/reset-password";
 import Calendar from "./domains/calendar";
 import Profile from "./domains/profile";
-import Booking from "./domains/booking";
-import Venue from "./domains/venue";
+import BookingView from "./domains/booking";
+import VenueViewer from "./domains/venue";
 import Settings from "./domains/settings";
 import Onboarding from "./domains/auth/additional-onboarding";
 import EnableNotifications from "./domains/auth/notification-onboarding/EnableNotifications";
-
+import { PageNotFound } from "./domains/404";
 import "./theme.css";
-
 import './messaging_get_token';
 
 export default function App() {
@@ -37,12 +36,12 @@ export default function App() {
           <Route path="profile/:id" element={<Profile />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="booking/:bookingID" element={<Booking />} />
-          <Route path="venue/:venueID" element={<Venue />} />
+          <Route path="booking/:bookingID" element={<BookingView />} />
+          <Route path="venue/:venueID" element={<VenueViewer />} />
           <Route path="complete-registration" element={<Onboarding />} />
           <Route path="enable-notifications" element={<EnableNotifications />} />
-          
 
+          <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

@@ -7,9 +7,9 @@ import reportWebVitals from './reportWebVitals';
 
 const getCurrentTheme = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
-function loadTheme(theme){
+function loadTheme(theme: string){
     const root = document.querySelector(':root');
-    root.setAttribute('color-scheme', `${theme}`);
+    if (root) root.setAttribute('color-scheme', `${theme}`);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -31,12 +31,12 @@ if ("serviceWorker" in navigator) {
     console.error("Did not find serviceWorker in navigator");
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(<App />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();
 
 export { loadTheme };

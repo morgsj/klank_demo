@@ -1,0 +1,11 @@
+#bookingModal {
+    padding: 5%;
+}
+
+#booking-modal-body {
+    max-width: 100%;
+}
+
+.calendar-cell {
+    color: var(--text);
+}

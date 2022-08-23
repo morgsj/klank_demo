@@ -1,0 +1,38 @@
+#avatar-container {
+    width: 100%;
+}
+
+#form {
+    width: 80%;
+    max-width: 1000px;
+    margin-left: min(10%, calc((100% -1000px) / 2));
+}
+
+.settings-section {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.col-sm-8:not(#profile-photo) {
+    display: flex;
+    align-content: left;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.link {
+    width: fit-content;
+}
+
+.settings-button {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    width: 50%;
+}
+
+.settings-button-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}

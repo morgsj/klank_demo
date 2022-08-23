@@ -20,7 +20,6 @@ const firebaseConfig = {
     storageBucket: 'gs://klank-a0771.appspot.com'
 };
 
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
