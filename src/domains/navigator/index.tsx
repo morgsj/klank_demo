@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// @ts-ignore
 import {
   CDBSidebar,
   CDBSidebarContent,
