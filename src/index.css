@@ -1,21 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Raleway&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Raleway&display=swap");
 
 body {
   margin: 0;
-  
-  font-family: 'Raleway', sans-serif;
+
+  font-family: "Raleway", sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-h1, h3, h5 {
-  font-family: 'BIZ UDPGothic', sans-serif;
+h1,
+h3,
+h5 {
+  font-family: "BIZ UDPGothic", sans-serif;
   font-weight: 700;
 }
 

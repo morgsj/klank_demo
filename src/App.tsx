@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Route,
-  Routes
-} from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./domains/dashboard";
 import Messages from "./domains/messages";
 import Search from "./domains/search";
@@ -20,12 +16,18 @@ import Onboarding from "./domains/auth/additional-onboarding";
 import EnableNotifications from "./domains/auth/notification-onboarding/EnableNotifications";
 import { PageNotFound } from "./domains/404";
 import "./theme.css";
-import './messaging_get_token';
+import "./messaging_get_token";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
 
 export default function App() {
-
   return (
-    <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="login" element={<Login />} />
@@ -39,11 +41,16 @@ export default function App() {
           <Route path="booking/:bookingID" element={<BookingView />} />
           <Route path="venue/:venueID" element={<VenueViewer />} />
           <Route path="complete-registration" element={<Onboarding />} />
-          <Route path="enable-notifications" element={<EnableNotifications />} />
+          <Route
+            path="enable-notifications"
+            element={<EnableNotifications />}
+          />
 
           <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen />
+    </QueryClientProvider>
   );
 }
 

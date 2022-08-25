@@ -1,36 +1,36 @@
 .btn-secondary:not(:hover) {
-    background-color: transparent;
-    border-color: var(--accent1);
-    color: var(--text);
+  background-color: transparent;
+  border-color: var(--accent1);
+  color: var(--text);
 }
 
 .btn-secondary:hover {
-    background-color: var(--accent2);
-    border-color: var(--accent1);
-    color: var(--text);
+  background-color: var(--accent2);
+  border-color: var(--accent1);
+  color: var(--text);
 }
 
 body {
-    background-color: var(--bkg1);
-    color: var(--text);
-    font-family: 'Raleway', sans-serif;
+  background-color: var(--bkg1);
+  color: var(--text);
+  font-family: "Raleway", sans-serif;
 }
 
 .btn-primary:not(:hover) {
-    background-color: var(--accent1) !important;
-    border-color: var(--accent1) !important;
-    color: white !important;
+  background-color: var(--accent1) !important;
+  border-color: var(--accent1) !important;
+  color: white !important;
 }
 
 .btn-primary:hover {
-    background-color: var(--accent2);
-    border-color: var(--accent2);
-    color: white;
+  background-color: var(--accent2);
+  border-color: var(--accent2);
+  color: white;
 }
 
 .btn-primary:disabled {
-    background-color: var(--accent1);
-    border-color: var(--accent1);
-    color: white;
-    opacity: 0.5;
+  background-color: var(--accent1);
+  border-color: var(--accent1);
+  color: white;
+  opacity: 0.5;
 }

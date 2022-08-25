@@ -5,63 +5,75 @@ import { auth } from "../../../firebase";
 import "./AdditionalOnboarding.css";
 import { countries, submitOnboardingInfo } from "../../../api/auth-api";
 import { Button, Dropdown, Form } from "react-bootstrap";
-import { getUserDetails } from "../../../api/user-api";
-import {UserDetails} from "../../../api/types";
+import { useUserDetails } from "../../../api/user-api";
 
 export default function Onboarding() {
-    const [user, loading, error] = useAuthState(auth);
-    const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
 
-    const [country, setCountry] = useState("United Kingdom");
+  const [userDetails, userDetailsLoading, userDetailsError] = useUserDetails(
+    user?.uid!
+  );
 
-    useEffect(() => {
-        if (loading) return;
-        if (!user) return navigate("/register");
-        else {
-            getUserDetails(user.uid).then((userDetails: UserDetails) => {
-                if (userDetails.hasOnboarded) navigate("/enable-notifications");
-            })
-        }
-    }, [user, loading]);
+  const [country, setCountry] = useState("United Kingdom");
 
-    const handleSubmit = () => {
-        submitOnboardingInfo(country, user!.uid).then(() => navigate("/dashboard"));
-    }
+  useEffect(() => {
+    if (loading) return;
+    if (!user) return navigate("/register");
+  }, [user, loading]);
 
-    return (
-        <div className="additional-registration">
-            <div className="additional-registration-container">
-                
-                <div className="logo-container">
-                    <img id="login-logo" alt="Klank Logo" src={require("../../../images/logo_transparent.png")}/>
-                </div>
+  useEffect(() => {
+    if (userDetails && userDetails.hasOnboarded)
+      navigate("/enable-notifications");
+  }, [userDetails]);
 
-                <h3>Additional information</h3>
-                <p>You can fill in this information later, but you must complete required fields to use all of Klank's features.</p>
+  const handleSubmit = () => {
+    submitOnboardingInfo(country, user!.uid).then(() => navigate("/dashboard"));
+  };
 
-                <Form>
-                    <Form.Label>Country</Form.Label>
-                    
-                    <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            {country}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            {countries.map(c => (<Dropdown.Item onClick={() => setCountry(c)}>{c}</Dropdown.Item>))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Form>
-
-                <Form>
-                    <Form.Label>Country</Form.Label>
-                    <Form.Control type="number" />
-                </Form>
-
-                <hr />
-                <Button id="submit-button" variant="primary" onClick={handleSubmit}>Save and go to Dashboard</Button>
-                
-            </div>
+  return (
+    <div className="additional-registration">
+      <div className="additional-registration-container">
+        <div className="logo-container">
+          <img
+            id="login-logo"
+            alt="Klank Logo"
+            src={require("../../../images/logo_transparent.png")}
+          />
         </div>
-    );
+
+        <h3>Additional information</h3>
+        <p>
+          You can fill in this information later, but you must complete required
+          fields to use all of Klank's features.
+        </p>
+
+        <Form>
+          <Form.Label>Country</Form.Label>
+
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {country}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              {countries.map((c) => (
+                <Dropdown.Item onClick={() => setCountry(c)}>{c}</Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Form>
+
+        <Form>
+          <Form.Label>Country</Form.Label>
+          <Form.Control type="number" />
+        </Form>
+
+        <hr />
+        <Button id="submit-button" variant="primary" onClick={handleSubmit}>
+          Save and go to Dashboard
+        </Button>
+      </div>
+    </div>
+  );
 }

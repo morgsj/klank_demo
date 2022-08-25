@@ -1,37 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import './colours.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals'; 
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import "./colours.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-const getCurrentTheme = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getCurrentTheme = () =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-function loadTheme(theme: string){
-    const root = document.querySelector(':root');
-    if (root) root.setAttribute('color-scheme', `${theme}`);
+function loadTheme(theme: string) {
+  const root = document.querySelector(":root");
+  if (root) root.setAttribute("color-scheme", `${theme}`);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    let colorTheme = localStorage.getItem('colorTheme');
-    if (colorTheme == null) {
-        colorTheme = getCurrentTheme();
-        localStorage.setItem('colorTheme', colorTheme);
-    }
+window.addEventListener("DOMContentLoaded", () => {
+  let colorTheme = localStorage.getItem("colorTheme");
+  if (colorTheme == null) {
+    colorTheme = getCurrentTheme();
+    localStorage.setItem("colorTheme", colorTheme);
+  }
 
-    loadTheme(colorTheme);
-})
+  loadTheme(colorTheme);
+});
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
+  navigator.serviceWorker
     .register("/firebase-messaging-sw.js")
-    .then((registration) => console.log("Registration successful, scope is:", registration.scope))
-    .catch((err) => console.log("Service worker registration failed, error:", err));
+    .then((registration) =>
+      console.log("Registration successful, scope is:", registration.scope)
+    )
+    .catch((err) =>
+      console.log("Service worker registration failed, error:", err)
+    );
 } else {
-    console.error("Did not find serviceWorker in navigator");
+  console.error("Did not find serviceWorker in navigator");
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(<App />);
 
 // If you want to start measuring performance in your app, pass a function

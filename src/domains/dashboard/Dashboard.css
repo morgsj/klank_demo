@@ -1,53 +1,52 @@
 @import url("../../theme.css");
 @import "../../theme.css";
 .dashboard-box {
+  display: flex;
+  align-content: center;
+  justify-content: center;
 
-    display: flex;
-    align-content: center;
-    justify-content: center;
+  border: 1px solid var(--accent4);
+  border-radius: 10px;
+  background-color: var(--accent4);
 
-    border: 1px solid var(--accent4);
-    border-radius: 10px;
-    background-color: var(--accent4);
-    
-    margin: max(1vh, 20px) 1vw max(1vh, 20px) 1vw;
-    height: max(20vh, 150px);
-    max-height: 200px;
+  margin: max(1vh, 20px) 1vw max(1vh, 20px) 1vw;
+  height: max(20vh, 150px);
+  max-height: 200px;
 
-    width: 100%;
+  width: 100%;
 
-    box-shadow: 7px 7px var(--accent3);
+  box-shadow: 7px 7px var(--accent3);
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dashboard-box:hover {
-    background-color: var(--accent3);
+  background-color: var(--accent3);
 }
 
 .dashboard-icon {
-    width: 100%;
-    height: min(max(7vh, 50px), 5vw);
-    min-height: 50px;
-    color: var(--accent1);
-    margin-top: min(1vh, 1vw);
-    margin-bottom: min(2vh, 2vw);
+  width: 100%;
+  height: min(max(7vh, 50px), 5vw);
+  min-height: 50px;
+  color: var(--accent1);
+  margin-top: min(1vh, 1vw);
+  margin-bottom: min(2vh, 2vw);
 }
 
 .action-description {
-    color: var(--text);
+  color: var(--text);
 }
 
 .action-message {
-    padding-top: min(2vh, 2vw);
-    padding-bottom: min(2vh, 2vw);
+  padding-top: min(2vh, 2vw);
+  padding-bottom: min(2vh, 2vw);
 }
 
-.action-message, .action-description {
-    display: flex;
-    align-content: center;
-    justify-content: center;
+.action-message,
+.action-description {
+  display: flex;
+  align-content: center;
+  justify-content: center;
 
-    font-family: 'BIZ UDPGothic', sans-serif;
+  font-family: "BIZ UDPGothic", sans-serif;
 }
-

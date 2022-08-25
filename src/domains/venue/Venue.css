@@ -1,22 +1,22 @@
 .label {
-    margin-top: 2vh;
+  margin-top: 2vh;
 }
 
 .small-print {
-    color: var(--accent3);
-    font-size: 14px;
-    margin-top: 0;
+  color: var(--accent3);
+  font-size: 14px;
+  margin-top: 0;
 }
 
 #submit-button {
-    margin-top: 2vh;
+  margin-top: 2vh;
 }
 
 #edit-button {
-    margin: 2vh 2vw 0 2vw;
-    width: calc(100% - 4vw);
+  margin: 2vh 2vw 0 2vw;
+  width: calc(100% - 4vw);
 }
 
 #carousel {
-    margin: 1vh 1vw 2vh 1vw;
+  margin: 1vh 1vw 2vh 1vw;
 }

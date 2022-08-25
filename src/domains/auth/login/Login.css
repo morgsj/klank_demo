@@ -1,63 +1,63 @@
 .login {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-container {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    background-color: var(--bkg2);
-    padding: 30px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: var(--bkg2);
+  padding: 30px;
 
-    border: 3px solid var(--accent1);
-    border-radius: 10px;
+  border: 3px solid var(--accent1);
+  border-radius: 10px;
 }
 
 .login-textBox {
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 10px;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 .login-btn {
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 10px;
-    width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .login div {
-    margin-top: 7px;
+  margin-top: 7px;
 }
 
 .logo-container {
-    width: 100%;
+  width: 100%;
 }
 
 #login-logo {
-    width: auto;
-    height: auto;
-    max-width: 10vw;
+  width: auto;
+  height: auto;
+  max-width: 10vw;
 }
 
 .login-google {
-    border: 2px solid var(--accent1) !important;
-    background-color: white !important;
-    color: black !important;
+  border: 2px solid var(--accent1) !important;
+  background-color: white !important;
+  color: black !important;
 }
 
 #google-logo {
-    width: auto;
-    height: auto;
-    max-width: 2.5vw;
-    margin-right: 0.5vw;
+  width: auto;
+  height: auto;
+  max-width: 2.5vw;
+  margin-right: 0.5vw;
 }
 
 #error-message {
-    color: var(--error);
-    word-wrap: normal;
+  color: var(--error);
+  word-wrap: normal;
 }
