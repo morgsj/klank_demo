@@ -2,8 +2,9 @@ import { getDocs, where, query } from "firebase/firestore";
 
 import { bookingsRef } from "../firebase";
 
-import { getVenueDetails } from "./venue-api";
+
 import { Booking } from "./types";
+import { useQuery } from "react-query";
 
 const getCalendarEvents = async (uid: string): Promise<Booking[]> => {
   const q = query(bookingsRef, where("artist", "==", uid));
@@ -11,6 +12,14 @@ const getCalendarEvents = async (uid: string): Promise<Booking[]> => {
   const docs = results.docs.map((doc) => doc.data() as Booking);
   return docs;
 };
+
+const useCalendarEvents = (uid: string): [Booking[] | undefined, boolean, boolean] => {
+  const {data, isLoading, isError} = useQuery(["getCalendarEvents", uid], ({ queryKey }) => {
+    const [_, uid] = queryKey;
+    return getCalendarEvents(uid);
+  })
+  return [data, isLoading, isError];
+}
 
 const getBookingByID = async (uid: string): Promise<Booking> => {
   const qry = query(bookingsRef, where("uid", "==", uid));
@@ -25,4 +34,4 @@ const getBookingByID = async (uid: string): Promise<Booking> => {
   }
 };
 
-export { getCalendarEvents, getBookingByID };
+export { useCalendarEvents, getBookingByID };

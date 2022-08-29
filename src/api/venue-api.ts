@@ -20,6 +20,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { Venue } from "./types";
+import { useQuery } from "react-query";
 
 const storage = getStorage();
 
@@ -35,6 +36,36 @@ const getVenueDetails = async (uid: string): Promise<Venue> => {
     );
   }
 };
+
+const useVenueDetails = (uid: string): [Venue | undefined, boolean, boolean] => {
+  const { data, isLoading, isError } = useQuery(["getVenueDetails", uid], ({ queryKey }) => {
+    const [_, uid] = queryKey;
+    return getVenueDetails(uid);
+  });
+  return [data, isLoading, isError];
+}
+
+const getVenuesDetails = async (uids: string[]): Promise<Venue[]> => {
+  const qry = query(venuesRef, where("uid", "in", uids));
+  const results = await getDocs(qry);
+
+  if (results.docs.length === uids.length) {
+    return results.docs.map(doc => doc.data() as Venue);
+  } else {
+    throw new Error(
+      `Did not find an entry for all uids`
+    );
+  }
+};
+
+const useVenuesDetails = (uids: string[]): [Venue[] | undefined, boolean, boolean] => {
+  const { data, isLoading, isError } = useQuery(["getVenueDetails", uids], ({ queryKey }) => {
+    const [_, u] = queryKey;
+    const uids = u as string[];
+    return getVenuesDetails(uids);
+  });
+  return [data, isLoading, isError];
+}
 
 const populateVenueDetails = async (venueIDs: string[]): Promise<Venue[]> => {
   let venues: Venue[] = [];
@@ -83,7 +114,8 @@ const uploadVenuePhoto = async (venueID: string, image: any) => {
 };
 
 export {
-  getVenueDetails,
+  useVenueDetails, getVenueDetails,
+  useVenuesDetails, getVenuesDetails,
   populateVenueDetails,
   createNewVenue,
   uploadVenuePhoto,

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../../firebase";
-import {
-  logInWithEmailAndPassword,
-  mapUserErrorCode,
-  signInWithGoogle,
-} from "../../../api/auth-api";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
 import { Button, Form } from "react-bootstrap";
+import { logInWithEmailAndPassword, mapUserErrorCode, signInWithGoogle } from "../../../api/user-api";
 
 function Login() {
   const [email, setEmail] = useState("");

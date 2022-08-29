@@ -3,9 +3,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../../firebase";
 import "./AdditionalOnboarding.css";
-import { countries, submitOnboardingInfo } from "../../../api/auth-api";
 import { Button, Dropdown, Form } from "react-bootstrap";
-import { useUserDetails } from "../../../api/user-api";
+import { submitOnboardingInfo, useUserDetails } from "../../../api/user-api";
+import { countries } from "../../../api/countries";
 
 export default function Onboarding() {
   const [user, loading, error] = useAuthState(auth);

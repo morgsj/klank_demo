@@ -18,7 +18,7 @@ import "./Venue.css";
 import { GeoPoint } from "firebase/firestore";
 import {
   createNewVenue,
-  getVenueDetails,
+  useVenueDetails,
   uploadVenuePhoto,
 } from "../../api/venue-api";
 import { useFilePicker } from "use-file-picker";
@@ -26,6 +26,9 @@ import { Address, UserDetails, Venue } from "../../api/types";
 
 export default function VenueViewer() {
   const { venueID } = useParams();
+  const [ venue, venueLoading, venueError ] = useVenueDetails(venueID!);
+
+  const [newVenue, setNewVenue] = useState(true);
 
   const [user, loading, error] = useAuthState(auth);
 
@@ -35,8 +38,6 @@ export default function VenueViewer() {
 
   const navigate = useNavigate();
 
-  const [newVenue, setNewVenue] = useState(true);
-  const [venue, setVenue] = useState<Venue>();
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -46,7 +47,6 @@ export default function VenueViewer() {
 
     const isNewVenue = venueID === "new-venue";
     setNewVenue(isNewVenue);
-    if (!isNewVenue) getVenueDetails(venueID!).then((v: Venue) => setVenue(v));
   }, [user, loading, navigate, venueID]);
 
   const createVenue = (venue: Venue) => {

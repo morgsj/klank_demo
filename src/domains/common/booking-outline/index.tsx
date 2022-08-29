@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 
 import "./BookingOutline.css";
-import { Booking, Venue } from "../../api/types";
+import { Booking, Venue } from "../../../api/types";
 
 interface BookingOutlineProps {
   venues: Venue[];

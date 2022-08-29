@@ -3,13 +3,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 
 import { auth } from "../../../firebase";
-import {
-  registerWithEmailAndPassword,
-  signInWithGoogle,
-} from "../../../api/auth-api";
 
 import "./Register.css";
 import { ButtonGroup, Form, ToggleButton, Button } from "react-bootstrap";
+import { registerWithEmailAndPassword, signInWithGoogle } from "../../../api/user-api";
 
 function Register() {
   const [email, setEmail] = useState("");

@@ -1,5 +1,5 @@
-@import url("../../theme.css");
-@import "../../theme.css";
+@import url("../../../theme.css");
+@import "../../../theme.css";
 .orange-button {
   color: var(--accent1);
   border-color: var(--accent1);

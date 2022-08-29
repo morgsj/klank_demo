@@ -4,73 +4,50 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { Send } from "react-bootstrap-icons";
-import { Button, Container, Navbar, Row, Modal, Col } from "react-bootstrap";
-
+import { Button, Container, Navbar, Row, Col } from "react-bootstrap";
 import Navigator from "../navigator";
 import Header from "../header";
-import BookingOutline from "../booking-outline";
 
 import "./Messages.css";
 
-import {
-  getAllConversations,
-  getConversation,
-  sendNewMessage,
-} from "../../api/message-api";
+import { useGetAllConversations } from "../../api/message-api";
 import { useUserDetails } from "../../api/user-api";
-import { getVenueDetails, populateVenueDetails } from "../../api/venue-api";
+import { populateVenueDetails, useVenuesDetails } from "../../api/venue-api";
 import {
-  Booking,
+  Conversation,
   ConversationPreview,
   Message,
-  UID,
-  UserDetails,
-  Venue,
+  Venue
 } from "../../api/types";
+import BookingRequestModal from "./components/booking-request-modal";
+import MessageView from "./components/message-view";
+import SidebarMessage from "./components/sidebar-message";
 
 export default function Messages() {
+
+  // User details
   const [user, loading, error] = useAuthState(auth);
-  const [hostVenues, setHostVenues] = useState<Venue[]>([]);
+  const [userDetails, userDetailsLoading, userDetailsError] = useUserDetails(user?.uid!);
+  const [hostVenues, hostVenuesLoading, hostVenuesError] = useVenuesDetails(userDetails?.venues!);
   const [isHost, setIsHost] = useState(false);
-  const [selectedConversation, setSelectedConversation] = useState<Message[]>(
-    []
-  ); // stores messages of current conversation in view
-  const [conversations, setConversations] = useState<ConversationPreview[]>(); // stores array of {senderID, latestMessage} pairs for sidebar view
-  const [messagerName, setMessagerName] = useState<string>("");
+
+
+  const [conversationData, conversationsLoading, conversationError] = useGetAllConversations(userDetails?.uid!, isHost);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+
   const [newMessage, setNewMessage] = useState<string>("");
 
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
-  const [booking, setBooking] = useState<Booking>();
-  const [isCreatingBooking, setIsCreatingBooking] = useState(false);
-  const handleBookingEdit = (booking: Booking) => setBooking(booking);
+  const handleSendBookingRequestClicked = () => handleShowModal();
 
   const sendBookingRequest = () => {
-    const host = selectedConversation[0].host;
-    const performer = selectedConversation[0].performer;
-    const isHostSender = isHost;
-    const message = "";
-
-    sendNewMessage(host, performer, isHostSender, message)
-      .then((data) => {
-        setNewMessage("");
-        setSelectedConversation([...selectedConversation, data]);
-      })
-      .then(handleCloseModal);
-  };
-
-  const handleSendBookingRequestClicked = () => {
-    setBooking(undefined);
-    setIsCreatingBooking(true);
-    handleShowModal();
+    console.error("Not yet implemented");
   };
 
   const navigate = useNavigate();
-  const [userDetails, userDetailsLoading, userDetailsError] = useUserDetails(
-    user?.uid!
-  );
 
   useEffect(() => {
     if (loading) return;
@@ -78,51 +55,28 @@ export default function Messages() {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    if (userDetails) {
-      setIsHost(userDetails.type.includes("host"));
-      populateVenueDetails(userDetails.venues).then((venues: Venue[]) =>
-        setHostVenues(venues)
-      );
-      getAllConversations(
-        userDetails.uid,
-        userDetails.type.includes("host")
-      ).then((c) => setConversations(c));
-    }
+    if (userDetails) setIsHost(userDetails.type.includes("host"));
   }, [userDetails]);
 
-  const clickConversation = (uid: string, name: string) => {
-    let host, performer;
-    if (isHost) {
-      host = user!.uid;
-      performer = uid;
-    } else {
-      performer = user!.uid;
-      host = uid;
-    }
-
-    getConversation(host, performer).then((messages: Message[]) => {
-      setSelectedConversation(messages);
-      setMessagerName(name);
-    });
-  };
-
-  const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setNewMessage(event.currentTarget.value);
+  const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => setNewMessage(event.currentTarget.value);
 
   const handleSendMessage = () => {
     if (newMessage.length !== 0) {
-      const host = selectedConversation[0].host;
-      const performer = selectedConversation[0].performer;
-
-      sendNewMessage(host, performer, isHost, newMessage).then(
-        (newMessage: Message) => {
-          setNewMessage("");
-          setSelectedConversation([...selectedConversation, newMessage]);
-        }
-      );
+      // const host = selectedConversation[0].host;
+      // const performer = selectedConversation[0].performer;
+      //
+      // sendNewMessage(host, performer, isHost, newMessage).then(
+      //   (newMessage: Message) => {
+      //     setNewMessage("");
+      //     setSelectedConversation([...selectedConversation, newMessage]);
+      //   }
+      // );
     }
   };
 
+  const modal = {handleShowModal, handleCloseModal, showModal, hostVenues, sendBookingRequest};
+
+  // @ts-ignore
   return (
     <>
       <Container className="global-container">
@@ -153,33 +107,30 @@ export default function Messages() {
                       </form>
                     </Navbar>
 
-                    {conversations == null && (
+                    {conversationsLoading && (
                       <div className="message-sidebar-status">
                         <b>Loading Messages...</b>
                       </div>
                     )}
 
-                    {conversations != null && conversations.length === 0 && (
-                      <div className="message-sidebar-status">
-                        <b>
-                          No messages <br />
-                          <br />
-                          Click the + icon to start the conversation
-                        </b>
-                      </div>
-                    )}
+                    {/*{!conversationsLoading && conversationData!.length === 0 && (*/}
+                    {/*  <div className="message-sidebar-status">*/}
+                    {/*    <b>*/}
+                    {/*      No messages <br />*/}
+                    {/*      <br />*/}
+                    {/*      Click the + icon to start the conversation*/}
+                    {/*    </b>*/}
+                    {/*  </div>*/}
+                    {/*)}*/}
 
-                    {conversations != null &&
-                      conversations.map((convo, index) => (
+                    {conversationData &&
+                      conversationData.map((convo, index) => (
                         <div key={index}>
                           <SidebarMessage
-                            other={convo.with}
-                            message={convo.message}
-                            setSelected={(name: string) =>
-                              clickConversation(convo.with, name)
-                            }
+                            other={isHost ? convo.performer : convo.host}
+                            message={convo.messages[0].message}
+                            setSelected={() => setSelectedConversation(convo)}
                           />
-                          <hr />
                         </div>
                       ))}
                   </div>
@@ -187,7 +138,7 @@ export default function Messages() {
                     {selectedConversation != null && (
                       <>
                         <div id="conversation-header">
-                          <h5>{messagerName}</h5>
+                          <h5>{"messengerName"}</h5>
 
                           {isHost && (
                             <Button
@@ -199,7 +150,7 @@ export default function Messages() {
                           )}
                         </div>
 
-                        {selectedConversation.map((message: Message) => (
+                        {selectedConversation.messages.map((message: Message) => (
                           <MessageView
                             key={message.message}
                             message={message}
@@ -239,121 +190,8 @@ export default function Messages() {
         </Row>
       </Container>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>New Booking</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <BookingOutline
-            booking={booking!}
-            fieldsChanged={handleBookingEdit}
-            venues={hostVenues}
-            isCreatingBooking={isCreatingBooking}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          {isCreatingBooking && (
-            <Button variant="primary" onClick={sendBookingRequest}>
-              Send
-            </Button>
-          )}
-
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <BookingRequestModal {...modal}/>
     </>
   );
 }
 
-interface SidebarMessageProps {
-  other: UID;
-  message: string;
-  setSelected: (_: string) => void;
-}
-function SidebarMessage({ other, message, setSelected }: SidebarMessageProps) {
-  const [name, setName] = useState("");
-
-  const [userDetails, userDetailsLoading, userDetailsError] =
-    useUserDetails(other);
-
-  useEffect(() => {
-    if (userDetails) setName(userDetails.name);
-  }, [userDetails]);
-
-  return (
-    <>
-      <div className="sidebar-message" onClick={() => setSelected(name)}>
-        <b>{name ?? other}</b>
-        <br />
-        {message ?? "Message not found"}
-      </div>
-    </>
-  );
-}
-
-function removeSeconds(dateStr: string) {
-  return dateStr.substring(0, dateStr.length - 3);
-}
-
-interface MessageProps {
-  message: Message;
-  sentByCurrentUser: boolean;
-}
-function MessageView({ message, sentByCurrentUser }: MessageProps) {
-  if (!message) return <></>;
-  if (!sentByCurrentUser) {
-    return (
-      <div className="message-container">
-        <div className="message" style={{ backgroundColor: "var(--accent4)" }}>
-          {/*{message.isRequest ? (<Button variant="primary" onClick={() => handleViewBookingRequest(message.request)}>View Booking Request</Button>) : message.message}*/}
-          {message.message}
-        </div>
-        <p className="message-time">
-          {removeSeconds(message.time.toDate().toLocaleTimeString())}
-        </p>
-      </div>
-    );
-  } else {
-    return (
-      <div
-        className="message-container"
-        style={{
-          display: "flex",
-          justifyContent: "right",
-          alignContent: "right",
-        }}
-      >
-        <Container>
-          <Row
-            style={{
-              display: "flex",
-              justifyContent: "right",
-              alignContent: "right",
-            }}
-          >
-            <div
-              className="message"
-              style={{ backgroundColor: "var(--accent2)", display: "flex" }}
-            >
-              {/*{message.isRequest ? (<Button variant="primary" onClick={() => handleViewBookingRequest(message.request)}>View Booking Request</Button>) : message.message}*/}
-              {message.message}
-            </div>
-          </Row>
-          <Row
-            style={{
-              display: "flex",
-              justifyContent: "right",
-              alignContent: "right",
-            }}
-          >
-            <p className="message-time">
-              {removeSeconds(message.time.toDate().toLocaleTimeString())}
-            </p>
-          </Row>
-        </Container>
-      </div>
-    );
-  }
-}

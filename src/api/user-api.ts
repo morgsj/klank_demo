@@ -1,26 +1,26 @@
-import { getDocs, where, query, doc, updateDoc } from "firebase/firestore";
+import { doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 
-import { db, usersRef, auth } from "../firebase";
-import { populateVenueDetails } from "./venue-api";
-
-import { updateProfile } from "firebase/auth";
+import { auth, db, usersRef } from "../firebase";
 
 import {
-  deleteObject,
-  getDownloadURL,
-  ref as storageRef,
-  getStorage,
-  uploadBytes,
-} from "firebase/storage";
-import { PortfolioDisplay, UserDetails, Venue } from "./types";
-import { useMutation, UseMutationOptions, useQuery } from "react-query";
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile
+} from "firebase/auth";
+
+import { deleteObject, getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+import { PortfolioDisplay, UserDetails, UserDetailsUpdater } from "./types";
+import { useMutation, useQuery } from "react-query";
 
 const storage = getStorage();
 
 const getUserDetails = async (uid: string): Promise<UserDetails> => {
   const qry = query(usersRef, where("uid", "==", uid));
   const results = await getDocs(qry);
-
   if (results.docs.length === 1) {
     return (results.docs[0].data() as UserDetails)!;
   } else {
@@ -44,6 +44,129 @@ function useUserDetails(
     }
   );
   return [data, isLoading, isError];
+}
+
+const googleProvider = new GoogleAuthProvider();
+const signInWithGoogle = async (type: string[]) => {
+  try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const user = res.user;
+    const q = query(usersRef, where("uid", "==", user.uid));
+    const docs = await getDocs(q);
+
+    if (docs.docs.length === 0) {
+      const dc = doc(db, "/users/", user.uid);
+      await setDoc(dc, {
+        uid: user.uid,
+        name: user.displayName,
+        authProvider: "google",
+        email: user.email,
+        type: type,
+        location: [0.0, 0.0],
+        reviews: []
+      });
+    }
+  } catch (e: any) {
+    console.error(e);
+    alert(e.message);
+  }
+};
+const logInWithEmailAndPassword = async (email: string, password: string) => {
+  await signInWithEmailAndPassword(auth, email, password);
+};
+const registerWithEmailAndPassword = async (
+  name: string,
+  email: string,
+  password: string,
+  type: string[],
+  phone: string
+) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+
+    const dc = doc(db, "/users/", user.uid);
+    await setDoc(dc, {
+      uid: user.uid,
+      name,
+      authProvider: "local",
+      email,
+      type,
+      location: [0.0, 0.0],
+      phone,
+      reviews: [],
+      hasOnboarded: false
+    });
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+const sendPasswordReset = async (email: string) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset link sent!");
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+const submitOnboardingInfo = async (country: string, uid: string) => {
+  try {
+    const dc = doc(db, "/users/", uid);
+    await updateDoc(dc, { country, hasOnboarded: true });
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+
+const updateUserDetails = async (uid: string, details: UserDetailsUpdater): Promise<void> => {
+  try {
+    const dc = doc(db, "/users/", uid);
+
+    await updateDoc(dc, details as { [x: string]: any; });
+
+    if (Object.keys(details as { [x: string]: any; }).includes("name")) {
+      await updateProfile(auth.currentUser!, { displayName: details.name });
+    }
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+
+const logout = () => {
+  sessionStorage.removeItem("userDetails");
+  signOut(auth);
+};
+
+const mapUserErrorCode = (code: string) => {
+  switch (code) {
+    case "auth/email-already-exists":
+      return "An email with that account already exists";
+    case "auth/invalid-email":
+      return "Please enter a valid email address";
+    case "auth/invalid-password":
+      return "Invalid password: your password must be 6 characters or more";
+    case "auth/user-not-found":
+      return "User not found - please register";
+    case "auth/internal-error":
+      return "Internal error. Please try again later.";
+    case "auth/wrong-password":
+      return "Wrong password";
+    default:
+      return "There was an error in authorisation. Please try again later.";
+  }
+};
+
+const useUpdateUserDetails = () => {
+  return useMutation<void, void, {uid: string, details: UserDetailsUpdater}>(
+    ["setUserDetails"],
+    ({ uid, details }): Promise<void> => {
+      return updateUserDetails(uid, details);
+    }
+  );
 }
 
 const getImage = async (uid: string, image: string): Promise<string> => {
@@ -72,8 +195,6 @@ function useImageURL(
 
 const uploadProfilePhoto = async (uid: string, image: any): Promise<string> => {
   const newImageRef = storageRef(storage, `users/${uid}/${image.name}`);
-
-  let returnValue;
   await uploadBytes(newImageRef, image);
 
   const url = await getDownloadURL(newImageRef);
@@ -98,6 +219,8 @@ const useUploadProfilePhoto = () => {
     }
   );
 };
+
+
 
 const deleteUserPhoto = async (uid: string, filename: string) => {
   console.log(`/users/${uid}/${filename}`);
@@ -172,6 +295,8 @@ const usePortfolioImageURLs = (
   return [data, isLoading, isError];
 };
 
+
+
 export {
   useUserDetails,
   useImageURL,
@@ -182,3 +307,11 @@ export {
   useRemoveProfilePhoto,
   usePortfolioImageURLs,
 };
+export { mapUserErrorCode };
+export { logout };
+export { updateUserDetails, useUpdateUserDetails };
+export { submitOnboardingInfo };
+export { sendPasswordReset };
+export { registerWithEmailAndPassword };
+export { logInWithEmailAndPassword };
+export { signInWithGoogle };

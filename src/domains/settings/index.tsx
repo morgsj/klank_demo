@@ -1,21 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-
-import { AuthStateHook, useAuthState } from "react-firebase-hooks/auth";
+import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
-
 import Navigator from "../navigator";
 import Header from "../header";
 import "./Settings.css";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-
-import { useFilePicker } from "use-file-picker";
 import { useUserDetails } from "../../api/user-api";
-import { ArrowRight } from "react-bootstrap-icons";
-import { updateUserDetails } from "../../api/auth-api";
-import { dateStringToTimestamp, toDateTime } from "../../api/helpers";
-import { loadTheme } from "../../";
-import { UserDetails } from "../../api/types";
 import { SettingsForm } from "./components/settings-form/SettingsForm";
 
 export default function Settings() {

@@ -25,10 +25,11 @@ const usersRef = collection(db, "users");
 const bookingsRef = collection(db, "bookings");
 const venuesRef = collection(db, "venues");
 const messagesRef = collection(db, "messages");
+const conversationsRef = collection(db, "conversations");
 
 onMessage(messaging, (payload) => {
   console.log("Message received. ", payload);
   // ...
 });
 
-export { auth, db, usersRef, bookingsRef, venuesRef, messagesRef, messaging };
+export { auth, db, usersRef, bookingsRef, venuesRef, messagesRef, conversationsRef, messaging };

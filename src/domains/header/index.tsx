@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { logout } from "../../api/auth-api";
 import "./Header.css";
+import { logout } from "../../api/user-api";
 
 interface HeaderProps {
   title: string;
