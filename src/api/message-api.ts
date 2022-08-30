@@ -16,20 +16,6 @@ import { Conversation, ConversationPreview, Message } from "./types";
 import Messages from "../domains/messages";
 import { useQuery } from "react-query";
 
-const getConversation = async (
-  host: string,
-  performer: string
-): Promise<Message[]> => {
-  const qry = query(
-    messagesRef,
-    where("host", "==", host),
-    where("performer", "==", performer),
-    orderBy("time")
-  );
-  const results = await getDocs(qry);
-  return results.docs.map((result) => result.data()) as Message[];
-};
-
 async function getAllMessages(uid: string, isHost: boolean): Promise<Conversation[]> {
   const qry = query(conversationsRef, where(isHost ? "host" : "performer", "==", uid));
   const docs = await getDocs(qry);
@@ -52,5 +38,7 @@ function useGetAllConversations(
   );
   return [data, isLoading, isError];
 }
+
+
 
 export { useGetAllConversations };

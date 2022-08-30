@@ -63,6 +63,8 @@ const useVenuesDetails = (uids: string[]): [Venue[] | undefined, boolean, boolea
     const [_, u] = queryKey;
     const uids = u as string[];
     return getVenuesDetails(uids);
+  }, {
+    enabled: !!uids
   });
   return [data, isLoading, isError];
 }

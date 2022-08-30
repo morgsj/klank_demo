@@ -2,8 +2,6 @@ import { Timestamp } from "firebase/firestore";
 
 /**
  * Converts firebase datetime into YYYY-MM-DD
- * @param {*} secs
- * @returns
  */
 function toDateTime(secs: number) {
   let t = new Date(1970, 0, 1);

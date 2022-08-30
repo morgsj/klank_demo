@@ -22,6 +22,7 @@ import {
 import BookingRequestModal from "./components/booking-request-modal";
 import MessageView from "./components/message-view";
 import SidebarMessage from "./components/sidebar-message";
+import ConversationPanel from "./components/conversation-panel";
 
 export default function Messages() {
 
@@ -35,7 +36,6 @@ export default function Messages() {
   const [conversationData, conversationsLoading, conversationError] = useGetAllConversations(userDetails?.uid!, isHost);
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
 
-  const [newMessage, setNewMessage] = useState<string>("");
 
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => setShowModal(false);
@@ -58,25 +58,8 @@ export default function Messages() {
     if (userDetails) setIsHost(userDetails.type.includes("host"));
   }, [userDetails]);
 
-  const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => setNewMessage(event.currentTarget.value);
-
-  const handleSendMessage = () => {
-    if (newMessage.length !== 0) {
-      // const host = selectedConversation[0].host;
-      // const performer = selectedConversation[0].performer;
-      //
-      // sendNewMessage(host, performer, isHost, newMessage).then(
-      //   (newMessage: Message) => {
-      //     setNewMessage("");
-      //     setSelectedConversation([...selectedConversation, newMessage]);
-      //   }
-      // );
-    }
-  };
-
   const modal = {handleShowModal, handleCloseModal, showModal, hostVenues, sendBookingRequest};
 
-  // @ts-ignore
   return (
     <>
       <Container className="global-container">
@@ -135,53 +118,13 @@ export default function Messages() {
                       ))}
                   </div>
                   <div className="col-sm-9" id="conversation-col">
-                    {selectedConversation != null && (
-                      <>
-                        <div id="conversation-header">
-                          <h5>{"messengerName"}</h5>
-
-                          {isHost && (
-                            <Button
-                              variant="primary"
-                              onClick={handleSendBookingRequestClicked}
-                            >
-                              Send Booking Request
-                            </Button>
-                          )}
-                        </div>
-
-                        {selectedConversation.messages.map((message: Message) => (
-                          <MessageView
-                            key={message.message}
-                            message={message}
-                            sentByCurrentUser={message.isHostSender === isHost}
-                          />
-                        ))}
-
-                        <div id="conversation-footer">
-                          <div className="input-group rounded">
-                            <input
-                              type="text"
-                              className="form-control new-message-box"
-                              placeholder="New Message..."
-                              aria-label="New Message..."
-                              aria-describedby="new-message"
-                              value={newMessage}
-                              onChange={handleMessageChange}
-                            />
-                            <span
-                              className="input-group-text border-0"
-                              id="new-message"
-                            >
-                              <Send
-                                id="send-icon"
-                                onClick={handleSendMessage}
-                              />
-                            </span>
-                          </div>
-                        </div>
-                      </>
-                    )}
+                    {selectedConversation != null &&
+                      <ConversationPanel
+                        isHost={isHost}
+                        handleSendBookingRequestClicked={handleSendBookingRequestClicked}
+                        selectedConversation={selectedConversation}
+                      />
+                    }
                   </div>
                 </Row>
               </Container>
